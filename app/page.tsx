@@ -5,3 +5,4 @@ export default function Home() {
         <p>App werk nou op Vercel!</p>
       </main>
   );
+}
