@@ -14,21 +14,27 @@ export default function MatchesPage() {
     async function load() {
       const res = await Promise.all(
         matches.map(async (m) => {
-          const r = await fetch(
-            https://api.open-meteo.com/v1/forecast?latitude=${m.lat}&longitude=${m.lon}&current=temperature_2m
-          );
+          const url =
+            "https://api.open-meteo.com/v1/forecast?latitude=" +
+            m.lat +
+            "&longitude=" +
+            m.lon +
+            "&current=temperature_2m";
 
+          const r = await fetch(url);
           const d = await r.json();
 
           return {
             id: m.id,
-            temp: ${Math.round(d.current.temperature_2m)}°C,
+            temp: Math.round(d.current.temperature_2m) + "°C",
           };
         })
       );
 
       const map: { [key: number]: string } = {};
-      res.forEach((x) => (map[x.id] = x.temp));
+      res.forEach((x) => {
+        map[x.id] = x.temp;
+      });
 
       setTemps(map);
     }
