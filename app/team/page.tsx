@@ -88,14 +88,21 @@ export default function TeamPage() {
     );
   }
 
-  function saveTeam() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
-      alert("Span gestoor!");
-    } catch {
-      alert("Kon nie span stoor nie.");
-    }
+const saveTeam = async () => {
+  const { error } = await supabase.from("teams").insert([
+    {
+      user_id: crypto.randomUUID(),
+      team: selectedTeam,
+    },
+  ]);
+
+  if (error) {
+    console.log(error);
+    alert("Error saving team ❌");
+  } else {
+    alert("Team saved! 🚀");
   }
+};
 
   function resetTeam() {
     setSelectedTeam(defaultTeam);
