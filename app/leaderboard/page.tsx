@@ -43,7 +43,7 @@ function getManagerName(userId: string) {
 
 function getTeamName(players: Player[]) {
   if (!players.length) return "Untitled Team";
-  return ${players[0].name.split(" ")[0]} Select;
+  return `${players[0].name.split(" ")[0]} Select`;
 }
 
 function getScore(players: Player[]) {
