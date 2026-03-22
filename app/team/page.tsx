@@ -52,7 +52,15 @@ export default function TeamPage() {
     return new Set(selectedTeam.map((player) => player.name));
   }, [selectedTeam]);
 
-  const totalCost = selectedTeam.reduce((sum, player) => sum + player.price, 0);
+  const totalCost = selectedTeam.reduce((sum, p) => sum + p.price, 0);
+
+const { error } = await supabase.from("teams").insert([
+  {
+    user_id: crypto.randomUUID(),
+    team: selectedTeam,
+    total_cost: totalCost,
+  },
+]);
 
   function addPlayer(player: Player) {
     if (teamNames.has(player.name)) return;
