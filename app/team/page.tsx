@@ -1,4 +1,4 @@
-[12:14 PM, 3/22/2026] Liefie Lamprecht: "use client";
+"use client"
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
