@@ -52,21 +52,13 @@ export default function TeamPage() {
     return new Set(selectedTeam.map((player) => player.name));
   }, [selectedTeam]);
 
-  const totalCost = selectedTeam.reduce((sum, p) => sum + p.price, 0);
-
-const { error } = await supabase.from("teams").insert([
-  {
-    user_id: crypto.randomUUID(),
-    team: selectedTeam,
-    total_cost: totalCost,
-  },
-]);
+  const totalCost = selectedTeam.reduce((sum, player) => sum + player.price, 0);
 
   function addPlayer(player: Player) {
     if (teamNames.has(player.name)) return;
 
     if (selectedTeam.length >= maxPlayers) {
-      alert(`Jou span is vol. Maksimum ${maxPlayers} spelers.`);
+      alert(Jou span is vol. Maksimum ${maxPlayers} spelers.);
       return;
     }
 
@@ -87,6 +79,7 @@ const { error } = await supabase.from("teams").insert([
         {
           user_id: crypto.randomUUID(),
           team: selectedTeam,
+          total_cost: totalCost,
         },
       ]);
 
@@ -145,10 +138,38 @@ const { error } = await supabase.from("teams").insert([
           </Link>
         </div>
 
-        <h1 style={{ fontSize: "42px", marginBottom: "10px" }}>Build Team</h1>
-        <p style={{ color: "#d1d5db", marginBottom: "24px" }}>
-          Kies jou span. Klik <b>Add</b> om spelers regs by jou span te voeg.
-        </p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "16px",
+            flexWrap: "wrap",
+            marginBottom: "24px",
+          }}
+        >
+          <div>
+            <h1 style={{ fontSize: "42px", marginBottom: "10px" }}>Build Team</h1>
+            <p style={{ color: "#d1d5db", margin: 0 }}>
+              Kies jou span. Klik <b>Add</b> om spelers regs by jou span te voeg.
+            </p>
+          </div>
+
+          <Link
+            href="/leaderboard"
+            style={{
+              textDecoration: "none",
+              background: "rgba(255,255,255,0.08)",
+              color: "white",
+              padding: "12px 16px",
+              borderRadius: "12px",
+              border: "1px solid rgba(255,255,255,0.12)",
+              fontWeight: "bold",
+            }}
+          >
+            View Leaderboard →
+          </Link>
+        </div>
 
         <div
           style={{
