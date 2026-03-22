@@ -21,25 +21,30 @@ export default function TeamPage() {
     { name: "Kurt-Lee Arendse", pos: "Wing", price: 10 },
   ];
 
+  const defaultTeam: Player[] = [
+    { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
+    { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
+  ];
+
   const [selectedTeam, setSelectedTeam] = useState<Player[]>([]);
   const [loaded, setLoaded] = useState(false);
 
   const maxPlayers = 5;
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
 
-    if (saved) {
-      setSelectedTeam(JSON.parse(saved));
-    } else {
-      const starterTeam = [
-        { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
-        { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
-      ];
-      setSelectedTeam(starterTeam);
+      if (saved) {
+        setSelectedTeam(JSON.parse(saved));
+      } else {
+        setSelectedTeam(defaultTeam);
+      }
+    } catch {
+      setSelectedTeam(defaultTeam);
+    } finally {
+      setLoaded(true);
     }
-
-    setLoaded(true);
   }, []);
 
   const teamNames = useMemo(
@@ -67,17 +72,17 @@ export default function TeamPage() {
   }
 
   function saveTeam() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
-    alert("Span gestoor!");
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
+      alert("Span gestoor!");
+    } catch {
+      alert("Kon nie span stoor nie.");
+    }
   }
 
   function resetTeam() {
-    const starterTeam = [
-      { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
-      { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
-    ];
-    setSelectedTeam(starterTeam);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(starterTeam));
+    setSelectedTeam(defaultTeam);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultTeam));
   }
 
   if (!loaded) {
