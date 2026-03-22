@@ -1,8 +1,4 @@
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-[5:59 PM, 3/22/2026] Liefie Lamprecht: "use client";
+"use client";
 
 import Link from "next/link";
 import { useState } from "react";
