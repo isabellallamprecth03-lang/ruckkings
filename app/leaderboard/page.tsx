@@ -197,7 +197,7 @@ export default function LeaderboardPage() {
 
             return (
               <div
-                key={entry?.id ?? empty-${index}}
+                key={entry?.id ?? `empty-${index}`}
                 style={{
                   minHeight: "220px",
                   borderRadius: "22px",
