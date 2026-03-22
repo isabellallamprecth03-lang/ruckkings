@@ -28,7 +28,7 @@ type LeaderboardEntry = {
 };
 
 function getManagerName(userId: string) {
-  return Manager ${userId.slice(0, 6).toUpperCase()};
+  return `Manager ${userId.slice(0, 6).toUpperCase()}`;
 }
 
 function formatDate(value?: string) {
