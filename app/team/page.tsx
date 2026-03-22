@@ -9,7 +9,7 @@ type Player = {
   price: number;
 };
 
-const STORAGE_KEY = "ruckings-selected-team";
+const STORAGE_KEY = "ruckkings-selected-team";
 
 export default function TeamPage() {
   const players: Player[] = [
@@ -33,10 +33,10 @@ export default function TeamPage() {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const savedTeam = localStorage.getItem(STORAGE_KEY);
 
-      if (saved) {
-        setSelectedTeam(JSON.parse(saved));
+      if (savedTeam) {
+        setSelectedTeam(JSON.parse(savedTeam));
       } else {
         setSelectedTeam(defaultTeam);
       }
@@ -47,18 +47,19 @@ export default function TeamPage() {
     }
   }, []);
 
-  const teamNames = useMemo(
-    () => new Set(selectedTeam.map((player) => player.name)),
-    [selectedTeam]
-  );
+  const teamNames = useMemo(() => {
+    return new Set(selectedTeam.map((player) => player.name));
+  }, [selectedTeam]);
 
   const totalCost = selectedTeam.reduce((sum, player) => sum + player.price, 0);
 
   function addPlayer(player: Player) {
-    if (teamNames.has(player.name)) return;
+    if (teamNames.has(player.name)) {
+      return;
+    }
 
     if (selectedTeam.length >= maxPlayers) {
-      alert(Jou span is vol. Maksimum ${maxPlayers} spelers.');
+      alert(Jou span is vol. Maksimum ${maxPlayers} spelers.);
       return;
     }
 
@@ -173,7 +174,9 @@ export default function TeamPage() {
                       <div style={{ color: "#facc15", fontWeight: "bold" }}>
                         R{player.price}m
                       </div>
+
                       <button
+                        type="button"
                         onClick={() => addPlayer(player)}
                         disabled={alreadyAdded}
                         style={{
@@ -259,6 +262,7 @@ export default function TeamPage() {
                       </div>
 
                       <button
+                        type="button"
                         onClick={() => removePlayer(player.name)}
                         style={{
                           background: "transparent",
@@ -279,6 +283,7 @@ export default function TeamPage() {
 
             <div style={{ display: "grid", gap: "12px", marginTop: "18px" }}>
               <button
+                type="button"
                 onClick={saveTeam}
                 style={{
                   background: "#facc15",
@@ -296,6 +301,7 @@ export default function TeamPage() {
               </button>
 
               <button
+                type="button"
                 onClick={resetTeam}
                 style={{
                   background: "transparent",
