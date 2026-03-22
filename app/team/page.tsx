@@ -138,6 +138,56 @@ async function saveTeam() {
     );
   }
 
+async function saveTeam() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      alert("Log eers in.");
+      window.location.href = "/login";
+      return;
+    }
+
+    const { error } = await supabase.from("teams").insert([
+      {
+        user_id: user.id,
+        team: selectedTeam,
+        total_cost: totalCost,
+      },
+    ]);
+
+    if (error) {
+      console.log(error);
+      alert("Error saving team");
+      return;
+    }
+
+    alert("Team saved!");
+  } catch (error) {
+    console.log(error);
+    alert("Error saving team");
+  }
+}
+<button
+  type="button"
+  onClick={logout}
+  style={{
+    background: "transparent",
+    color: "white",
+    border: "1px solid rgba(255,255,255,0.18)",
+    padding: "12px 16px",
+    borderRadius: "12px",
+    fontWeight: "bold",
+    cursor: "pointer",
+  }}
+>
+  Logout
+</button>
   return (
     <main
       style={{
