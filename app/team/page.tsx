@@ -1,8 +1,8 @@
-import { supabase } from "@/lib/supabase";
 "use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 type Player = {
   name: string;
@@ -28,7 +28,6 @@ export default function TeamPage() {
   ];
 
   const [selectedTeam, setSelectedTeam] = useState<Player[]>([]);
-  
   const [loaded, setLoaded] = useState(false);
 
   const maxPlayers = 5;
@@ -56,12 +55,10 @@ export default function TeamPage() {
   const totalCost = selectedTeam.reduce((sum, player) => sum + player.price, 0);
 
   function addPlayer(player: Player) {
-    if (teamNames.has(player.name)) {
-      return;
-    }
+    if (teamNames.has(player.name)) return;
 
     if (selectedTeam.length >= maxPlayers) {
-     alert(`Jou span is vol. Maksimum ${maxPlayers} spelers.`);
+      alert(Jou span is vol. Maksimum ${maxPlayers} spelers.);
       return;
     }
 
@@ -74,21 +71,29 @@ export default function TeamPage() {
     );
   }
 
-const saveTeam = async () => {
-  const { error } = await supabase.from("teams").insert([
-    {
-      user_id: crypto.randomUUID(),
-      team: selectedTeam,
-    },
-  ]);
+  async function saveTeam() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
 
-  if (error) {
-    console.log(error);
-    alert("Error saving team ❌");
-  } else {
-    alert("Team saved! 🚀");
+      const { error } = await supabase.from("teams").insert([
+        {
+          user_id: crypto.randomUUID(),
+          team: selectedTeam,
+        },
+      ]);
+
+      if (error) {
+        console.log(error);
+        alert("Error saving team");
+        return;
+      }
+
+      alert("Team saved!");
+    } catch (error) {
+      console.log(error);
+      alert("Error saving team");
+    }
   }
-};
 
   function resetTeam() {
     setSelectedTeam(defaultTeam);
