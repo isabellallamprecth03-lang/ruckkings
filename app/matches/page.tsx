@@ -143,8 +143,8 @@ export default function MatchesPage() {
             return {
               id: match.id,
               info: {
-                temperature: ${Math.round(data.current.temperature_2m)}°C,
-                wind: ${Math.round(data.current.wind_speed_10m)} km/h,
+                temperature: `${Math.round(data.current.temperature_2m)}°C`,
+                wind: `${Math.round(data.current.wind_speed_10m)} km/h`,
                 condition: weatherCodeToText(data.current.weather_code),
               },
             };
