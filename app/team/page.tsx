@@ -107,13 +107,6 @@ async function saveTeam() {
   }
 }
 
-      alert("Team saved!");
-    } catch (error) {
-      console.log(error);
-      alert("Error saving team");
-    }
-  }
-
   function resetTeam() {
     setSelectedTeam(defaultTeam);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultTeam));
