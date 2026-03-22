@@ -28,21 +28,7 @@ export default function TeamPage() {
   ];
 
   const [selectedTeam, setSelectedTeam] = useState<Player[]>([]);
-  const saveTeam = async () => {
-   const { error } = await supabase.from("teams").insert([
-    {
-      user_id: crypto.randomUUID(),
-      team: selectedTeam,
-    },
-  ]);
-
-  if (error) {
-    console.log(error);
-    alert("Error saving team ❌");
-  } else {
-    alert("Team saved! 🚀");
-  }
-};
+  
   const [loaded, setLoaded] = useState(false);
 
   const maxPlayers = 5;
