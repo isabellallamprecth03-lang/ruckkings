@@ -58,7 +58,7 @@ export default function TeamPage() {
     if (teamNames.has(player.name)) return;
 
     if (selectedTeam.length >= maxPlayers) {
-      alert(`Jou span is vol. Maksimum ${maxPlayers} spelers.`);
+      alert(Jou span is vol. Maksimum ${maxPlayers} spelers.);
       return;
     }
 
@@ -71,41 +71,47 @@ export default function TeamPage() {
     );
   }
 
-async function saveTeam() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
+  async function saveTeam() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
 
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
 
-    if (userError || !user) {
-      alert("Log eers in.");
-      window.location.href = "/login";
-      return;
-    }
+      if (userError || !user) {
+        alert("Log eers in.");
+        window.location.href = "/login";
+        return;
+      }
 
-    const { error } = await supabase.from("teams").insert([
-      {
-        user_id: user.id,
-        team: selectedTeam,
-        total_cost: totalCost,
-      },
-    ]);
+      const { error } = await supabase.from("teams").insert([
+        {
+          user_id: user.id,
+          team: selectedTeam,
+          total_cost: totalCost,
+        },
+      ]);
 
-    if (error) {
+      if (error) {
+        console.log(error);
+        alert("Error saving team");
+        return;
+      }
+
+      alert("Team saved!");
+    } catch (error) {
       console.log(error);
       alert("Error saving team");
-      return;
     }
-
-    alert("Team saved!");
-  } catch (error) {
-    console.log(error);
-    alert("Error saving team");
   }
-}
+
+  async function logout() {
+    await supabase.auth.signOut();
+    alert("Jy is uitgeteken.");
+    window.location.href = "/";
+  }
 
   function resetTeam() {
     setSelectedTeam(defaultTeam);
@@ -131,56 +137,6 @@ async function saveTeam() {
     );
   }
 
-async function saveTeam() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
-
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError || !user) {
-      alert("Log eers in.");
-      window.location.href = "/login";
-      return;
-    }
-
-    const { error } = await supabase.from("teams").insert([
-      {
-        user_id: user.id,
-        team: selectedTeam,
-        total_cost: totalCost,
-      },
-    ]);
-
-    if (error) {
-      console.log(error);
-      alert("Error saving team");
-      return;
-    }
-
-    alert("Team saved!");
-  } catch (error) {
-    console.log(error);
-    alert("Error saving team");
-  }
-}
-<button
-  type="button"
-  onClick={logout}
-  style={{
-    background: "transparent",
-    color: "white",
-    border: "1px solid rgba(255,255,255,0.18)",
-    padding: "12px 16px",
-    borderRadius: "12px",
-    fontWeight: "bold",
-    cursor: "pointer",
-  }}
->
-  Logout
-</button>
   return (
     <main
       style={{
@@ -216,20 +172,38 @@ async function saveTeam() {
             </p>
           </div>
 
-          <Link
-            href="/leaderboard"
-            style={{
-              textDecoration: "none",
-              background: "rgba(255,255,255,0.08)",
-              color: "white",
-              padding: "12px 16px",
-              borderRadius: "12px",
-              border: "1px solid rgba(255,255,255,0.12)",
-              fontWeight: "bold",
-            }}
-          >
-            View Leaderboard →
-          </Link>
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <Link
+              href="/leaderboard"
+              style={{
+                textDecoration: "none",
+                background: "rgba(255,255,255,0.08)",
+                color: "white",
+                padding: "12px 16px",
+                borderRadius: "12px",
+                border: "1px solid rgba(255,255,255,0.12)",
+                fontWeight: "bold",
+              }}
+            >
+              View Leaderboard →
+            </Link>
+
+            <button
+              type="button"
+              onClick={logout}
+              style={{
+                background: "transparent",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.18)",
+                padding: "12px 16px",
+                borderRadius: "12px",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         <div
