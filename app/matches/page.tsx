@@ -129,7 +129,7 @@ export default function MatchesPage() {
             </h1>
 
             <p style={{ margin: 0, color: "#cbd5e1", maxWidth: "760px" }}>
-              Track upcoming fixtures, stadiums, weather conditions and live match viewing links.
+              Track fixtures, stadiums, weather conditions en live match links.
             </p>
           </div>
 
