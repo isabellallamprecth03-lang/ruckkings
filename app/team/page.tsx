@@ -59,7 +59,7 @@ export default function TeamPage() {
     }
 
     if (selectedTeam.length >= maxPlayers) {
-     alert(Jou span is vol. Maksimum ${maxPlayers} spelers.);
+     alert(`Jou span is vol. Maksimum ${maxPlayers} spelers.`);
       return;
     }
 
