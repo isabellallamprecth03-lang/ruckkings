@@ -1,30 +1,3 @@
-[11:56 AM, 3/22/2026] Liefie Lamprecht: import Link from "next/link";
-
-export default function LoginPage() {
-  return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background:
-          "radial-gradient(circle at top, #1f5f3a 0%, #0b1020 45%, #09111b 100%)",
-        color: "white",
-        fontFamily: "Arial, sans-serif",
-        padding: "60px 20px",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "480px",
-          margin: "0 auto",
-          background: "rgba(255,255,255,0.08)",
-          border: "1px solid rgba(255,255,255,0.12)",
-          borderRadius: "24px",
-          padding: "28px",
-          boxShadow: "0 20px 50px rgba(0,0,0,0.25)",
-        }}
-      >
-        <div style={{ marginBottom: "18px" }}>
-          <Link href="/" style={{ color: "#facc15", textD…
 [12:14 PM, 3/22/2026] Liefie Lamprecht: "use client";
 
 import Link from "next/link";
@@ -49,9 +22,56 @@ export default function TeamPage() {
   const [selectedTeam, setSelectedTeam] = useState<Player[]>([
     { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
     { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
-  ]);
+  ]…
+[12:20 PM, 3/22/2026] Liefie Lamprecht: "use client";
+
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+
+type Player = {
+  name: string;
+  pos: string;
+  price: number;
+};
+
+const STORAGE_KEY = "ruckings-selected-team";
+
+export default function TeamPage() {
+  const players: Player[] = [
+    { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
+    { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
+    { name: "Handré Pollard", pos: "Flyhalf", price: 11 },
+    { name: "Pieter-Steph du Toit", pos: "Forward", price: 13 },
+    { name: "Damian Willemse", pos: "Back", price: 9 },
+    { name: "Kurt-Lee Arendse", pos: "Wing", price: 10 },
+  ];
+
+  const [selectedTeam, setSelectedTeam] = useState<Player[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   const maxPlayers = 5;
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved) as Player[];
+        setSelectedTeam(parsed);
+      } else {
+        setSelectedTeam([
+          { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
+          { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
+        ]);
+      }
+    } catch {
+      setSelectedTeam([
+        { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
+        { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
+      ]);
+    } finally {
+      setLoaded(true);
+    }
+  }, []);
 
   const teamNames = useMemo(
     () => new Set(selectedTeam.map((player) => player.name)),
@@ -74,7 +94,40 @@ export default function TeamPage() {
   }
 
   function saveTeam() {
-    alert("Span gestoor!");
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
+      alert("Span gestoor!");
+    } catch {
+      alert("Kon nie span stoor nie.");
+    }
+  }
+
+  function resetTeam() {
+    const defaultTeam = [
+      { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
+      { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
+    ];
+    setSelectedTeam(defaultTeam);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultTeam));
+  }
+
+  if (!loaded) {
+    return (
+      <main
+        style={{
+          minHeight: "100vh",
+          background:
+            "radial-gradient(circle at top, #1f5f3a 0%, #0b1020 45%, #09111b 100%)",
+          color: "white",
+          fontFamily: "Arial, sans-serif",
+          padding: "50px 20px",
+        }}
+      >
+        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+          <p>Loading team...</p>
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -250,23 +303,41 @@ export default function TeamPage() {
               )}
             </div>
 
-            <button
-              onClick={saveTeam}
-              style={{
-                background: "#facc15",
-                color: "#0b1020",
-                border: "none",
-                padding: "16px",
-                borderRadius: "12px",
-                fontWeight: "bold",
-                fontSize: "16px",
-                cursor: "pointer",
-                width: "100%",
-                marginTop: "18px",
-              }}
-            >
-              Save Team
-            </button>
+            <div style={{ display: "grid", gap: "12px", marginTop: "18px" }}>
+              <button
+                onClick={saveTeam}
+                style={{
+                  background: "#facc15",
+                  color: "#0b1020",
+                  border: "none",
+                  padding: "16px",
+                  borderRadius: "12px",
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  width: "100%",
+                }}
+              >
+                Save Team
+              </button>
+
+              <button
+                onClick={resetTeam}
+                style={{
+                  background: "transparent",
+                  color: "white",
+                  border: "1px solid rgba(255,255,255,0.18)",
+                  padding: "16px",
+                  borderRadius: "12px",
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  width: "100%",
+                }}
+              >
+                Reset Team
+              </button>
+            </div>
           </div>
         </div>
       </div>
