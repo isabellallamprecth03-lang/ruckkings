@@ -17,13 +17,21 @@ export default function MatchesPage() {
           const r = await fetch(
             https://api.open-meteo.com/v1/forecast?latitude=${m.lat}&longitude=${m.lon}&current=temperature_2m
           );
+
           const d = await r.json();
-          return { id: m.id, temp: ${Math.round(d.current.temperature_2m)}°C };
+
+          return {
+            id: m.id,
+            temp: ${Math.round(d.current.temperature_2m)}°C,
+          };
         })
       );
 
-      const map: any = {};
-      res.forEach((x) => (map[x.id] = x.temp));
+      const map: { [key: number]: string } = {};
+      res.forEach((x) => {
+        map[x.id] = x.temp;
+      });
+
       setTemps(map);
     }
 
@@ -35,9 +43,11 @@ export default function MatchesPage() {
       <h1>Matches</h1>
 
       {matches.map((m) => (
-        <div key={m.id}>
-          <h3>{m.home} vs {m.away}</h3>
-          <p>{temps[m.id] || "Loading..."}</p>
+        <div key={m.id} style={{ marginBottom: 20 }}>
+          <h3>
+            {m.home} vs {m.away}
+          </h3>
+          <p>Temperature: {temps[m.id] || "Loading..."}</p>
         </div>
       ))}
     </div>
