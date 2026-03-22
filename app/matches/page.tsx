@@ -1,6 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+type MatchStatus = "Live" | "Upcoming" | "Finished";
 
 type Match = {
   id: number;
@@ -9,87 +12,159 @@ type Match = {
   stadium: string;
   city: string;
   kickoff: string;
-  status: "Live" | "Upcoming" | "Finished";
-  weather: string;
-  temperature: string;
+  status: MatchStatus;
   watchUrl: string;
+  latitude: number;
+  longitude: number;
 };
 
-export default function MatchesPage() {
-  const matches: Match[] = [
-    {
-      id: 1,
-      homeTeam: "Bulls",
-      awayTeam: "Sharks",
-      stadium: "Loftus Versfeld",
-      city: "Pretoria",
-      kickoff: "28 Mar 2026 • 17:00",
-      status: "Upcoming",
-      weather: "Partly cloudy",
-      temperature: "24°C",
-      watchUrl: "#",
-    },
-    {
-      id: 2,
-      homeTeam: "Stormers",
-      awayTeam: "Lions",
-      stadium: "Cape Town Stadium",
-      city: "Cape Town",
-      kickoff: "29 Mar 2026 • 15:00",
-      status: "Live",
-      weather: "Sunny",
-      temperature: "21°C",
-      watchUrl: "#",
-    },
-    {
-      id: 3,
-      homeTeam: "Springboks",
-      awayTeam: "All Blacks",
-      stadium: "FNB Stadium",
-      city: "Johannesburg",
-      kickoff: "02 Apr 2026 • 19:30",
-      status: "Upcoming",
-      weather: "Clear skies",
-      temperature: "18°C",
-      watchUrl: "#",
-    },
-    {
-      id: 4,
-      homeTeam: "Cheetahs",
-      awayTeam: "Pumas",
-      stadium: "Free State Stadium",
-      city: "Bloemfontein",
-      kickoff: "26 Mar 2026 • 18:00",
-      status: "Finished",
-      weather: "Windy",
-      temperature: "20°C",
-      watchUrl: "#",
-    },
-  ];
+type WeatherInfo = {
+  temperature: string;
+  wind: string;
+  condition: string;
+};
 
-  function getStatusStyle(status: Match["status"]) {
-    if (status === "Live") {
-      return {
-        background: "rgba(239,68,68,0.18)",
-        color: "#fca5a5",
-        border: "1px solid rgba(239,68,68,0.35)",
-      };
-    }
+const matches: Match[] = [
+  {
+    id: 1,
+    homeTeam: "Bulls",
+    awayTeam: "Sharks",
+    stadium: "Loftus Versfeld",
+    city: "Pretoria",
+    kickoff: "28 Mar 2026 • 17:00",
+    status: "Upcoming",
+    watchUrl: "#",
+    latitude: -25.7532,
+    longitude: 28.2249,
+  },
+  {
+    id: 2,
+    homeTeam: "Stormers",
+    awayTeam: "Lions",
+    stadium: "Cape Town Stadium",
+    city: "Cape Town",
+    kickoff: "29 Mar 2026 • 15:00",
+    status: "Live",
+    watchUrl: "#",
+    latitude: -33.9036,
+    longitude: 18.4115,
+  },
+  {
+    id: 3,
+    homeTeam: "Springboks",
+    awayTeam: "All Blacks",
+    stadium: "FNB Stadium",
+    city: "Johannesburg",
+    kickoff: "02 Apr 2026 • 19:30",
+    status: "Upcoming",
+    watchUrl: "#",
+    latitude: -26.2347,
+    longitude: 27.9826,
+  },
+  {
+    id: 4,
+    homeTeam: "Cheetahs",
+    awayTeam: "Pumas",
+    stadium: "Free State Stadium",
+    city: "Bloemfontein",
+    kickoff: "26 Mar 2026 • 18:00",
+    status: "Finished",
+    watchUrl: "#",
+    latitude: -29.1167,
+    longitude: 26.2041,
+  },
+];
 
-    if (status === "Finished") {
-      return {
-        background: "rgba(148,163,184,0.15)",
-        color: "#cbd5e1",
-        border: "1px solid rgba(148,163,184,0.22)",
-      };
-    }
-
+function getStatusStyle(status: MatchStatus) {
+  if (status === "Live") {
     return {
-      background: "rgba(250,204,21,0.14)",
-      color: "#facc15",
-      border: "1px solid rgba(250,204,21,0.28)",
+      background: "rgba(239,68,68,0.18)",
+      color: "#fca5a5",
+      border: "1px solid rgba(239,68,68,0.35)",
     };
   }
+
+  if (status === "Finished") {
+    return {
+      background: "rgba(148,163,184,0.15)",
+      color: "#cbd5e1",
+      border: "1px solid rgba(148,163,184,0.22)",
+    };
+  }
+
+  return {
+    background: "rgba(250,204,21,0.14)",
+    color: "#facc15",
+    border: "1px solid rgba(250,204,21,0.28)",
+  };
+}
+
+function weatherCodeToText(code: number) {
+  const map: Record<number, string> = {
+    0: "Clear",
+    1: "Mainly clear",
+    2: "Partly cloudy",
+    3: "Overcast",
+    45: "Fog",
+    48: "Rime fog",
+    51: "Light drizzle",
+    53: "Moderate drizzle",
+    55: "Dense drizzle",
+    61: "Light rain",
+    63: "Moderate rain",
+    65: "Heavy rain",
+    71: "Light snow",
+    73: "Moderate snow",
+    75: "Heavy snow",
+    80: "Rain showers",
+    81: "Heavy showers",
+    82: "Violent showers",
+    95: "Thunderstorm",
+  };
+
+  return map[code] ?? "Unknown";
+}
+
+export default function MatchesPage() {
+  const [weatherByMatch, setWeatherByMatch] = useState<Record<number, WeatherInfo>>({});
+  const [loadingWeather, setLoadingWeather] = useState(true);
+
+  useEffect(() => {
+    async function loadWeather() {
+      try {
+        const results = await Promise.all(
+          matches.map(async (match) => {
+            const response = await fetch(
+              https://api.open-meteo.com/v1/forecast?latitude=${match.latitude}&longitude=${match.longitude}&current=temperature_2m,weather_code,wind_speed_10m
+            );
+
+            const data = await response.json();
+
+            const info: WeatherInfo = {
+              temperature: ${Math.round(data.current.temperature_2m)}°C,
+              wind: ${Math.round(data.current.wind_speed_10m)} km/h,
+              condition: weatherCodeToText(data.current.weather_code),
+            };
+
+            return { id: match.id, info };
+          })
+        );
+
+        const nextState: Record<number, WeatherInfo> = {};
+        results.forEach((item) => {
+          nextState[item.id] = item.info;
+        });
+
+        setWeatherByMatch(nextState);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoadingWeather(false);
+      }
+    }
+
+    loadWeather();
+  }, []);
 
   return (
     <main
@@ -129,7 +204,7 @@ export default function MatchesPage() {
             </h1>
 
             <p style={{ margin: 0, color: "#cbd5e1", maxWidth: "760px" }}>
-              Track fixtures, stadiums, weather conditions en live match links.
+              Track fixtures, stadiums, live weather conditions and match viewing links.
             </p>
           </div>
 
@@ -158,6 +233,7 @@ export default function MatchesPage() {
         >
           {matches.map((match) => {
             const statusStyle = getStatusStyle(match.status);
+            const weather = weatherByMatch[match.id];
 
             return (
               <div
@@ -217,7 +293,7 @@ export default function MatchesPage() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
+                    gridTemplateColumns: "1fr 1fr 1fr",
                     gap: "12px",
                     marginBottom: "18px",
                   }}
@@ -240,7 +316,9 @@ export default function MatchesPage() {
                     >
                       Weather
                     </div>
-                    <div style={{ fontWeight: 700 }}>{match.weather}</div>
+                    <div style={{ fontWeight: 700 }}>
+                      {loadingWeather ? "Loading..." : weather?.condition ?? "Unavailable"}
+                    </div>
                   </div>
 
                   <div
@@ -261,7 +339,32 @@ export default function MatchesPage() {
                     >
                       Temperature
                     </div>
-                    <div style={{ fontWeight: 700 }}>{match.temperature}</div>
+                    <div style={{ fontWeight: 700 }}>
+                      {loadingWeather ? "Loading..." : weather?.temperature ?? "--"}
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      background: "rgba(255,255,255,0.05)",
+                      borderRadius: "14px",
+                      padding: "14px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        color: "#94a3b8",
+                        fontSize: "12px",
+                        textTransform: "uppercase",
+                        marginBottom: "6px",
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      Wind
+                    </div>
+                    <div style={{ fontWeight: 700 }}>
+                      {loadingWeather ? "Loading..." : weather?.wind ?? "--"}
+                    </div>
                   </div>
                 </div>
 
