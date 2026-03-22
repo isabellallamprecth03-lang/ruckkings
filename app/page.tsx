@@ -1,17 +1,10 @@
+import Link from "next/link";
+
 export default function Home() {
   const players = [
     { name: "Cheslin Kolbe", pos: "Wing", price: "R12m" },
     { name: "Siya Kolisi", pos: "Loose Forward", price: "R10m" },
     { name: "Handré Pollard", pos: "Flyhalf", price: "R11m" },
-    { name: "Pieter-Steph du Toit", pos: "Forward", price: "R13m" },
-    { name: "Damian Willemse", pos: "Back", price: "R9m" },
-    { name: "Kurt-Lee Arendse", pos: "Wing", price: "R10m" },
-  ];
-
-  const selectedTeam = [
-    { name: "Cheslin Kolbe", role: "Captain" },
-    { name: "Siya Kolisi", role: "Vice Captain" },
-    { name: "Handré Pollard", role: "Starter" },
   ];
 
   const leaderboard = [
@@ -50,12 +43,12 @@ export default function Home() {
           <a href="#features" style={{ color: "white", textDecoration: "none" }}>
             Features
           </a>
-          <a href="#login" style={{ color: "white", textDecoration: "none" }}>
+          <Link href="/login" style={{ color: "white", textDecoration: "none" }}>
             Login
-          </a>
-          <a href="#team" style={{ color: "white", textDecoration: "none" }}>
+          </Link>
+          <Link href="/team" style={{ color: "white", textDecoration: "none" }}>
             Team
-          </a>
+          </Link>
           <a
             href="#leaderboard"
             style={{ color: "white", textDecoration: "none" }}
@@ -117,38 +110,17 @@ export default function Home() {
           </p>
 
           <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
-            <a
-              href="#login"
-              style={{
-                background: "#facc15",
-                color: "#0b1020",
-                padding: "14px 24px",
-                borderRadius: "12px",
-                textDecoration: "none",
-                fontWeight: "bold",
-              }}
-            >
-              Login
-            </a>
+            <Link href="/login" style={primaryLinkStyle}>
+              Sign In
+            </Link>
 
-            <a
-              href="#team"
-              style={{
-                border: "1px solid rgba(255,255,255,0.2)",
-                padding: "14px 24px",
-                borderRadius: "12px",
-                textDecoration: "none",
-                color: "white",
-                fontWeight: "bold",
-              }}
-            >
+            <Link href="/team" style={secondaryLinkStyle}>
               Build Team
-            </a>
+            </Link>
           </div>
         </div>
 
         <div
-          id="login"
           style={{
             background: "rgba(255,255,255,0.08)",
             border: "1px solid rgba(255,255,255,0.12)",
@@ -158,26 +130,57 @@ export default function Home() {
           }}
         >
           <h2 style={{ marginTop: 0, fontSize: "32px", marginBottom: "8px" }}>
-            Login
+            Quick Preview
           </h2>
           <p style={{ color: "#d1d5db", marginBottom: "22px" }}>
-            Sign in om jou fantasy team en leagues te bestuur.
+            Preview of players and leaderboard.
           </p>
 
-          <div style={{ display: "grid", gap: "14px" }}>
-            <input
-              type="email"
-              placeholder="Email address"
-              style={inputStyle}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              style={inputStyle}
-            />
+          <div style={{ display: "grid", gap: "12px", marginBottom: "20px" }}>
+            {players.map((player) => (
+              <div
+                key={player.name}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  padding: "12px 14px",
+                  background: "rgba(255,255,255,0.05)",
+                  borderRadius: "14px",
+                }}
+              >
+                <div>
+                  <div style={{ fontWeight: "bold" }}>{player.name}</div>
+                  <div style={{ color: "#d1d5db", fontSize: "14px" }}>
+                    {player.pos}
+                  </div>
+                </div>
+                <div style={{ color: "#facc15", fontWeight: "bold" }}>
+                  {player.price}
+                </div>
+              </div>
+            ))}
+          </div>
 
-            <button style={primaryButtonStyle}>Sign In</button>
-            <button style={secondaryButtonStyle}>Create Account</button>
+          <div style={{ display: "grid", gap: "10px" }}>
+            {leaderboard.map((entry) => (
+              <div
+                key={entry.rank}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  padding: "12px 14px",
+                  background: "rgba(255,255,255,0.05)",
+                  borderRadius: "14px",
+                }}
+              >
+                <div style={{ fontWeight: "bold" }}>
+                  #{entry.rank} {entry.name}
+                </div>
+                <div style={{ color: "#facc15", fontWeight: "bold" }}>
+                  {entry.points} pts
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -194,31 +197,13 @@ export default function Home() {
         }}
       >
         {[
-          {
-            icon: "⚡",
-            title: "Live Updates",
-            text: "Real-time wedstryde en scores.",
-          },
-          {
-            icon: "🏆",
-            title: "Fantasy Rugby",
-            text: "Bou jou span en klim die leaderboard.",
-          },
-          {
-            icon: "📱",
-            title: "Mobile First",
-            text: "Ontwerp vir vinnige, mooi phone usage.",
-          },
-          {
-            icon: "💰",
-            title: "Paid Leagues",
-            text: "Skep leagues met entry fees en pryse.",
-          },
+          { icon: "⚡", title: "Live Updates", text: "Real-time wedstryde en scores." },
+          { icon: "🏆", title: "Fantasy Rugby", text: "Bou jou span en klim die leaderboard." },
+          { icon: "📱", title: "Mobile First", text: "Ontwerp vir vinnige, mooi phone usage." },
+          { icon: "💰", title: "Paid Leagues", text: "Skep leagues met entry fees en pryse." },
         ].map((item) => (
           <div key={item.title} style={featureCardStyle}>
-            <div style={{ fontSize: "28px", marginBottom: "10px" }}>
-              {item.icon}
-            </div>
+            <div style={{ fontSize: "28px", marginBottom: "10px" }}>{item.icon}</div>
             <h3 style={{ margin: "0 0 10px 0" }}>{item.title}</h3>
             <p style={{ color: "#d1d5db", margin: 0, lineHeight: 1.6 }}>
               {item.text}
@@ -228,165 +213,7 @@ export default function Home() {
       </section>
 
       <section
-        id="team"
-        style={{
-          maxWidth: "1100px",
-          margin: "0 auto 80px auto",
-          padding: "0 20px",
-        }}
-      >
-        <h2 style={{ fontSize: "38px", marginBottom: "18px" }}>Build Team</h2>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1.2fr 0.8fr",
-            gap: "24px",
-          }}
-        >
-          <div
-            style={{
-              background: "rgba(255,255,255,0.08)",
-              borderRadius: "20px",
-              padding: "24px",
-              border: "1px solid rgba(255,255,255,0.08)",
-            }}
-          >
-            <h3 style={{ marginTop: 0, marginBottom: "16px" }}>
-              Available Players
-            </h3>
-
-            <div style={{ display: "grid", gap: "12px" }}>
-              {players.map((player) => (
-                <div
-                  key={player.name}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "14px 16px",
-                    background: "rgba(255,255,255,0.05)",
-                    borderRadius: "14px",
-                  }}
-                >
-                  <div>
-                    <div style={{ fontWeight: "bold" }}>{player.name}</div>
-                    <div style={{ color: "#d1d5db", fontSize: "14px" }}>
-                      {player.pos}
-                    </div>
-                  </div>
-
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ color: "#facc15", fontWeight: "bold" }}>
-                      {player.price}
-                    </div>
-                    <button
-                      style={{
-                        marginTop: "8px",
-                        background: "#facc15",
-                        color: "#0b1020",
-                        border: "none",
-                        borderRadius: "10px",
-                        padding: "8px 12px",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Add
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div
-            style={{
-              background: "rgba(255,255,255,0.08)",
-              borderRadius: "20px",
-              padding: "24px",
-              border: "1px solid rgba(255,255,255,0.08)",
-            }}
-          >
-            <h3 style={{ marginTop: 0, marginBottom: "16px" }}>Your Team</h3>
-
-            <div style={{ display: "grid", gap: "12px" }}>
-              {selectedTeam.map((player) => (
-                <div
-                  key={player.name}
-                  style={{
-                    padding: "14px 16px",
-                    background: "rgba(255,255,255,0.05)",
-                    borderRadius: "14px",
-                  }}
-                >
-                  <div style={{ fontWeight: "bold" }}>{player.name}</div>
-                  <div style={{ color: "#facc15", fontSize: "14px" }}>
-                    {player.role}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button
-              style={{
-                ...primaryButtonStyle,
-                width: "100%",
-                marginTop: "18px",
-              }}
-            >
-              Save Team
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section
         id="leaderboard"
-        style={{
-          maxWidth: "1100px",
-          margin: "0 auto 80px auto",
-          padding: "0 20px",
-        }}
-      >
-        <h2 style={{ fontSize: "38px", marginBottom: "18px" }}>
-          Leaderboard Preview
-        </h2>
-
-        <div
-          style={{
-            background: "rgba(255,255,255,0.08)",
-            borderRadius: "20px",
-            padding: "24px",
-            border: "1px solid rgba(255,255,255,0.08)",
-          }}
-        >
-          {leaderboard.map((entry) => (
-            <div
-              key={entry.rank}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                padding: "14px 0",
-                borderBottom:
-                  entry.rank !== leaderboard.length
-                    ? "1px solid rgba(255,255,255,0.08)"
-                    : "none",
-              }}
-            >
-              <div style={{ fontWeight: "bold" }}>
-                #{entry.rank} {entry.name}
-              </div>
-              <div style={{ color: "#facc15", fontWeight: "bold" }}>
-                {entry.points} pts
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section
-        id="about"
         style={{
           maxWidth: "1100px",
           margin: "0 auto 80px auto",
@@ -415,12 +242,11 @@ export default function Home() {
           </div>
 
           <h2 style={{ marginTop: 0, fontSize: "38px", marginBottom: "12px" }}>
-            Build it into a full rugby platform
+            Login and team pages are now separate
           </h2>
 
           <p style={{ color: "#d1d5db", lineHeight: 1.8, marginBottom: 0 }}>
-            Van hier af kan ons regte login, leagues, spelers, fixtures,
-            fantasy punte, admin dashboards en monetisering bybou.
+            Van hier af kan ons regte auth, saved teams, leagues en backend logic bybou.
           </p>
         </div>
       </section>
@@ -428,36 +254,22 @@ export default function Home() {
   );
 }
 
-const inputStyle = {
-  padding: "16px",
-  borderRadius: "12px",
-  border: "1px solid rgba(255,255,255,0.1)",
-  background: "rgba(255,255,255,0.08)",
-  color: "white",
-  fontSize: "16px",
-  outline: "none",
-} as const;
-
-const primaryButtonStyle = {
+const primaryLinkStyle = {
   background: "#facc15",
   color: "#0b1020",
-  border: "none",
-  padding: "16px",
+  padding: "14px 24px",
   borderRadius: "12px",
+  textDecoration: "none",
   fontWeight: "bold",
-  fontSize: "16px",
-  cursor: "pointer",
 } as const;
 
-const secondaryButtonStyle = {
-  background: "transparent",
-  color: "white",
-  border: "1px solid rgba(255,255,255,0.18)",
-  padding: "16px",
+const secondaryLinkStyle = {
+  border: "1px solid rgba(255,255,255,0.2)",
+  padding: "14px 24px",
   borderRadius: "12px",
+  textDecoration: "none",
+  color: "white",
   fontWeight: "bold",
-  fontSize: "16px",
-  cursor: "pointer",
 } as const;
 
 const featureCardStyle = {
