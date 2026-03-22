@@ -15,7 +15,7 @@ export default function MatchesPage() {
       const res = await Promise.all(
         matches.map(async (m) => {
           const r = await fetch(
-            https://api.open-meteo.com/v1/forecast?latitude=${m.lat}&longitude=${m.lon}&current=temperature_2m
+            `https://api.open-meteo.com/v1/forecast?latitude=${m.lat}&longitude=${m.lon}&current=temperature_2m`
           );
 
           const d = await r.json();
