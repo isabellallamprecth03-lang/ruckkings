@@ -2,53 +2,32 @@
 
 import { useEffect, useState } from "react";
 
-type Match = {
-  id: number;
-  home: string;
-  away: string;
-  lat: number;
-  lon: number;
-};
-
-type Weather = {
-  temp: string;
-};
-
-const matches: Match[] = [
+const matches = [
   { id: 1, home: "Bulls", away: "Sharks", lat: -25.75, lon: 28.22 },
   { id: 2, home: "Stormers", away: "Lions", lat: -33.9, lon: 18.41 },
 ];
 
 export default function MatchesPage() {
-  const [weather, setWeather] = useState<Record<number, Weather>>({});
+  const [temps, setTemps] = useState<{ [key: number]: string }>({});
 
   useEffect(() => {
-    async function loadWeather() {
-      const results = await Promise.all(
+    async function load() {
+      const res = await Promise.all(
         matches.map(async (m) => {
-          const res = await fetch(
+          const r = await fetch(
             https://api.open-meteo.com/v1/forecast?latitude=${m.lat}&longitude=${m.lon}&current=temperature_2m
           );
-
-          const data = await res.json();
-
-          return {
-            id: m.id,
-            temp: ${Math.round(data.current.temperature_2m)}°C,
-          };
+          const d = await r.json();
+          return { id: m.id, temp: ${Math.round(d.current.temperature_2m)}°C };
         })
       );
 
-      const map: Record<number, Weather> = {};
-
-      results.forEach((r) => {
-        map[r.id] = { temp: r.temp };
-      });
-
-      setWeather(map);
+      const map: any = {};
+      res.forEach((x) => (map[x.id] = x.temp));
+      setTemps(map);
     }
 
-    loadWeather();
+    load();
   }, []);
 
   return (
@@ -56,12 +35,9 @@ export default function MatchesPage() {
       <h1>Matches</h1>
 
       {matches.map((m) => (
-        <div key={m.id} style={{ marginBottom: 20 }}>
-          <h3>
-            {m.home} vs {m.away}
-          </h3>
-
-          <p>Temperature: {weather[m.id]?.temp ?? "Loading..."}</p>
+        <div key={m.id}>
+          <h3>{m.home} vs {m.away}</h3>
+          <p>{temps[m.id] || "Loading..."}</p>
         </div>
       ))}
     </div>
