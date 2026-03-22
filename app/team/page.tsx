@@ -1,29 +1,4 @@
-"use client"
-
-import Link from "next/link";
-import { useMemo, useState } from "react";
-
-type Player = {
-  name: string;
-  pos: string;
-  price: number;
-};
-
-export default function TeamPage() {
-  const players: Player[] = [
-    { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
-    { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
-    { name: "Handré Pollard", pos: "Flyhalf", price: 11 },
-    { name: "Pieter-Steph du Toit", pos: "Forward", price: 13 },
-    { name: "Damian Willemse", pos: "Back", price: 9 },
-    { name: "Kurt-Lee Arendse", pos: "Wing", price: 10 },
-  ];
-
-  const [selectedTeam, setSelectedTeam] = useState<Player[]>([
-    { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
-    { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
-  ]…
-[12:20 PM, 3/22/2026] Liefie Lamprecht: "use client";
+"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -52,25 +27,19 @@ export default function TeamPage() {
   const maxPlayers = 5;
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved) as Player[];
-        setSelectedTeam(parsed);
-      } else {
-        setSelectedTeam([
-          { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
-          { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
-        ]);
-      }
-    } catch {
-      setSelectedTeam([
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (saved) {
+      setSelectedTeam(JSON.parse(saved));
+    } else {
+      const starterTeam = [
         { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
         { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
-      ]);
-    } finally {
-      setLoaded(true);
+      ];
+      setSelectedTeam(starterTeam);
     }
+
+    setLoaded(true);
   }, []);
 
   const teamNames = useMemo(
@@ -82,33 +51,33 @@ export default function TeamPage() {
 
   function addPlayer(player: Player) {
     if (teamNames.has(player.name)) return;
+
     if (selectedTeam.length >= maxPlayers) {
       alert(Jou span is vol. Maksimum ${maxPlayers} spelers.);
       return;
     }
+
     setSelectedTeam((prev) => [...prev, player]);
   }
 
   function removePlayer(playerName: string) {
-    setSelectedTeam((prev) => prev.filter((player) => player.name !== playerName));
+    setSelectedTeam((prev) =>
+      prev.filter((player) => player.name !== playerName)
+    );
   }
 
   function saveTeam() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
-      alert("Span gestoor!");
-    } catch {
-      alert("Kon nie span stoor nie.");
-    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
+    alert("Span gestoor!");
   }
 
   function resetTeam() {
-    const defaultTeam = [
+    const starterTeam = [
       { name: "Cheslin Kolbe", pos: "Wing", price: 12 },
       { name: "Siya Kolisi", pos: "Loose Forward", price: 10 },
     ];
-    setSelectedTeam(defaultTeam);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultTeam));
+    setSelectedTeam(starterTeam);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(starterTeam));
   }
 
   if (!loaded) {
