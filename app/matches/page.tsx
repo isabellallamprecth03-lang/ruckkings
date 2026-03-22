@@ -22,7 +22,7 @@ export default function MatchesPage() {
 
           return {
             id: m.id,
-            temp: `${Math.round(d.current.temperature_2m)}°C`,
+            temp: '${Math.round(d.current.temperature_2m)}°C`,
           };
         })
       );
