@@ -38,7 +38,7 @@ const PLAYER_POINTS: Record<string, number> = {
 };
 
 function getManagerName(userId: string) {
-  return Manager ${userId.slice(0, 6).toUpperCase()};
+  return `Manager ${userId.slice(0, 6).toUpperCase()}`;
 }
 
 function getTeamName(players: Player[]) {
