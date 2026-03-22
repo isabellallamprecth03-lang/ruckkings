@@ -9,7 +9,6 @@ export default function Home() {
         fontFamily: "Arial, sans-serif",
       }}
     >
-      {/* NAVBAR */}
       <nav
         style={{
           display: "flex",
@@ -20,112 +19,178 @@ export default function Home() {
           backdropFilter: "blur(6px)",
         }}
       >
-        <div style={{ fontWeight: "bold", fontSize: "20px" }}>
-          🏉 Ruckings
-        </div>
+        <div style={{ fontWeight: "bold", fontSize: "20px" }}>🏉 Ruckings</div>
 
         <div style={{ display: "flex", gap: "20px" }}>
           <a href="#features" style={{ color: "white", textDecoration: "none" }}>
             Features
           </a>
-          <a href="#about" style={{ color: "white", textDecoration: "none" }}>
-            About
+          <a href="#login" style={{ color: "white", textDecoration: "none" }}>
+            Login
           </a>
         </div>
-
-        <a
-          href="#"
-          style={{
-            background: "#facc15",
-            color: "#0b1020",
-            padding: "10px 16px",
-            borderRadius: "10px",
-            textDecoration: "none",
-            fontWeight: "bold",
-          }}
-        >
-          Login
-        </a>
       </nav>
 
-      {/* HERO */}
       <section
         style={{
           maxWidth: "1100px",
-          margin: "80px auto 0 auto",
+          margin: "70px auto 0 auto",
           padding: "0 20px",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+          gap: "32px",
+          alignItems: "center",
         }}
       >
-        <div
-          style={{
-            display: "inline-block",
-            padding: "8px 14px",
-            borderRadius: "999px",
-            background: "rgba(255,215,0,0.12)",
-            border: "1px solid rgba(255,215,0,0.28)",
-            color: "#facc15",
-            fontSize: "14px",
-            marginBottom: "24px",
-            fontWeight: "bold",
-          }}
-        >
-          🏉 Rugby. Fantasy. Live.
+        <div>
+          <div
+            style={{
+              display: "inline-block",
+              padding: "8px 14px",
+              borderRadius: "999px",
+              background: "rgba(255,215,0,0.12)",
+              border: "1px solid rgba(255,215,0,0.28)",
+              color: "#facc15",
+              fontSize: "14px",
+              marginBottom: "24px",
+              fontWeight: "bold",
+            }}
+          >
+            🏉 Rugby. Fantasy. Live.
+          </div>
+
+          <h1
+            style={{
+              fontSize: "60px",
+              lineHeight: "1.05",
+              marginBottom: "18px",
+            }}
+          >
+            Ruckings Live
+          </h1>
+
+          <p
+            style={{
+              fontSize: "22px",
+              color: "#d1d5db",
+              maxWidth: "650px",
+              marginBottom: "28px",
+              lineHeight: 1.5,
+            }}
+          >
+            Join fantasy leagues, track live rugby action en bou jou span op ’n
+            premium platform.
+          </p>
+
+          <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
+            <a
+              href="#login"
+              style={{
+                background: "#facc15",
+                color: "#0b1020",
+                padding: "14px 24px",
+                borderRadius: "12px",
+                textDecoration: "none",
+                fontWeight: "bold",
+              }}
+            >
+              Login
+            </a>
+
+            <a
+              href="#features"
+              style={{
+                border: "1px solid rgba(255,255,255,0.2)",
+                padding: "14px 24px",
+                borderRadius: "12px",
+                textDecoration: "none",
+                color: "white",
+                fontWeight: "bold",
+              }}
+            >
+              Explore Features
+            </a>
+          </div>
         </div>
 
-        <h1
+        <div
+          id="login"
           style={{
-            fontSize: "64px",
-            lineHeight: "1.05",
-            marginBottom: "20px",
+            background: "rgba(255,255,255,0.08)",
+            border: "1px solid rgba(255,255,255,0.12)",
+            borderRadius: "24px",
+            padding: "28px",
+            boxShadow: "0 20px 50px rgba(0,0,0,0.25)",
           }}
         >
-          Ruckings Live
-        </h1>
+          <h2 style={{ marginTop: 0, fontSize: "32px", marginBottom: "8px" }}>
+            Login
+          </h2>
+          <p style={{ color: "#d1d5db", marginBottom: "22px" }}>
+            Sign in om jou fantasy team en leagues te bestuur.
+          </p>
 
-        <p
-          style={{
-            fontSize: "24px",
-            color: "#d1d5db",
-            maxWidth: "700px",
-            marginBottom: "30px",
-          }}
-        >
-          Die nuwe plek vir rugby fans, fantasy leagues en live wedstryd
-          aksie.
-        </p>
+          <div style={{ display: "grid", gap: "14px" }}>
+            <input
+              type="email"
+              placeholder="Email address"
+              style={{
+                padding: "16px",
+                borderRadius: "12px",
+                border: "1px solid rgba(255,255,255,0.1)",
+                background: "rgba(255,255,255,0.08)",
+                color: "white",
+                fontSize: "16px",
+                outline: "none",
+              }}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              style={{
+                padding: "16px",
+                borderRadius: "12px",
+                border: "1px solid rgba(255,255,255,0.1)",
+                background: "rgba(255,255,255,0.08)",
+                color: "white",
+                fontSize: "16px",
+                outline: "none",
+              }}
+            />
 
-        <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-          <a
-            href="#features"
-            style={{
-              background: "#facc15",
-              color: "#0b1020",
-              padding: "14px 24px",
-              borderRadius: "12px",
-              textDecoration: "none",
-              fontWeight: "bold",
-            }}
-          >
-            Begin nou
-          </a>
+            <button
+              style={{
+                background: "#facc15",
+                color: "#0b1020",
+                border: "none",
+                padding: "16px",
+                borderRadius: "12px",
+                fontWeight: "bold",
+                fontSize: "16px",
+                cursor: "pointer",
+              }}
+            >
+              Sign In
+            </button>
 
-          <a
-            href="#about"
-            style={{
-              border: "1px solid rgba(255,255,255,0.2)",
-              padding: "14px 24px",
-              borderRadius: "12px",
-              textDecoration: "none",
-              color: "white",
-              fontWeight: "bold",
-            }}
-          >
-            Leer meer
-          </a>
+            <button
+              style={{
+                background: "transparent",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.18)",
+                padding: "16px",
+                borderRadius: "12px",
+                fontWeight: "bold",
+                fontSize: "16px",
+                cursor: "pointer",
+              }}
+            >
+              Create Account
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* FEATURES */}
       <section
         id="features"
         style={{
@@ -133,44 +198,32 @@ export default function Home() {
           margin: "80px auto",
           padding: "0 20px",
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
           gap: "20px",
         }}
       >
         {[
-          { icon: "⚡", title: "Live Updates", text: "Real-time wedstryde" },
-          { icon: "🏆", title: "Fantasy Rugby", text: "Bou jou span" },
-          { icon: "📱", title: "Mobile First", text: "Perfek vir jou foon" },
-          { icon: "🚀", title: "Groei", text: "Skalering na 'n platform" },
+          { icon: "⚡", title: "Live Updates", text: "Real-time wedstryde en scores." },
+          { icon: "🏆", title: "Fantasy Rugby", text: "Bou jou span en klim die leaderboard." },
+          { icon: "📱", title: "Mobile First", text: "Ontwerp vir vinnige, mooi phone usage." },
+          { icon: "💰", title: "Paid Leagues", text: "Skep leagues met entry fees en pryse." },
         ].map((item) => (
           <div
             key={item.title}
             style={{
               background: "rgba(255,255,255,0.08)",
               borderRadius: "18px",
-              padding: "20px",
+              padding: "22px",
+              border: "1px solid rgba(255,255,255,0.08)",
             }}
           >
-            <div style={{ fontSize: "28px" }}>{item.icon}</div>
-            <h3>{item.title}</h3>
-            <p style={{ color: "#d1d5db" }}>{item.text}</p>
+            <div style={{ fontSize: "28px", marginBottom: "10px" }}>{item.icon}</div>
+            <h3 style={{ margin: "0 0 10px 0" }}>{item.title}</h3>
+            <p style={{ color: "#d1d5db", margin: 0, lineHeight: 1.6 }}>
+              {item.text}
+            </p>
           </div>
         ))}
-      </section>
-
-      {/* ABOUT */}
-      <section
-        id="about"
-        style={{
-          maxWidth: "1100px",
-          margin: "0 auto 80px auto",
-          padding: "0 20px",
-        }}
-      >
-        <h2 style={{ fontSize: "36px" }}>Volgende fase</h2>
-        <p style={{ color: "#d1d5db", maxWidth: "700px" }}>
-          Login, leagues, players, leaderboard en monetisering kom volgende.
-        </p>
       </section>
     </main>
   );
