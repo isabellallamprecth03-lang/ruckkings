@@ -21,38 +21,14 @@ type TeamRow = {
 type LeaderboardEntry = {
   id: string;
   managerName: string;
-  teamName: string;
   players: Player[];
   totalCost: number;
-  score: number;
+  rankScore: number;
   createdAt: string;
 };
 
-const PLAYER_POINTS: Record<string, number> = {
-  "Cheslin Kolbe": 84,
-  "Siya Kolisi": 76,
-  "Handré Pollard": 80,
-  "Pieter-Steph du Toit": 92,
-  "Damian Willemse": 69,
-  "Kurt-Lee Arendse": 78,
-};
-
 function getManagerName(userId: string) {
-  return `Manager ${userId.slice(0, 6).toUpperCase()}`;
-}
-
-function getTeamName(players: Player[]) {
-  if (!players.length) return "Untitled Team";
-  return `${players[0].name.split(" ")[0]} Select`;
-}
-
-function getScore(players: Player[]) {
-  const base = players.reduce((sum, player) => {
-    return sum + (PLAYER_POINTS[player.name] ?? player.price * 6);
-  }, 0);
-
-  const squadBonus = players.length >= 5 ? 25 : players.length * 4;
-  return base + squadBonus;
+  return Manager ${userId.slice(0, 6).toUpperCase()};
 }
 
 function formatDate(value?: string) {
@@ -66,6 +42,10 @@ function formatDate(value?: string) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(date);
+}
+
+function getRankScore(players: Player[], totalCost: number) {
+  return players.length * 20 + totalCost;
 }
 
 export default function LeaderboardPage() {
@@ -103,15 +83,14 @@ export default function LeaderboardPage() {
           return {
             id: row.id,
             managerName: getManagerName(row.user_id || "guest"),
-            teamName: getTeamName(players),
             players,
             totalCost,
-            score: getScore(players),
+            rankScore: getRankScore(players, totalCost),
             createdAt: formatDate(row.created_at),
           };
         })
         .sort((a, b) => {
-          if (b.score !== a.score) return b.score - a.score;
+          if (b.rankScore !== a.rankScore) return b.rankScore - a.rankScore;
           return b.totalCost - a.totalCost;
         });
 
@@ -143,7 +122,7 @@ export default function LeaderboardPage() {
             alignItems: "center",
             gap: "16px",
             flexWrap: "wrap",
-            marginBottom: "26px",
+            marginBottom: "28px",
           }}
         >
           <div>
@@ -154,33 +133,31 @@ export default function LeaderboardPage() {
             <h1
               style={{
                 margin: "14px 0 8px",
-                fontSize: "48px",
+                fontSize: "46px",
                 lineHeight: 1.05,
               }}
             >
               Leaderboard
             </h1>
 
-            <p style={{ margin: 0, color: "#cbd5e1", maxWidth: "760px" }}>
-              Live rankings van Ruckings teams. Volg die top squads, compare
-              value en kyk wie lei die fantasy race.
+            <p style={{ margin: 0, color: "#cbd5e1" }}>
+              Top Ruckings managers en hulle squads.
             </p>
           </div>
 
-          <div
+          <Link
+            href="/team"
             style={{
-              minWidth: "220px",
-              background: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(255,255,255,0.10)",
-              borderRadius: "18px",
-              padding: "16px 18px",
+              textDecoration: "none",
+              background: "#facc15",
+              color: "#0b1020",
+              padding: "14px 18px",
+              borderRadius: "12px",
+              fontWeight: "bold",
             }}
           >
-            <div style={{ color: "#94a3b8", fontSize: "13px", marginBottom: "6px" }}>
-              Total Entries
-            </div>
-            <div style={{ fontSize: "34px", fontWeight: 700 }}>{entries.length}</div>
-          </div>
+            Build Team
+          </Link>
         </div>
 
         <div
@@ -197,14 +174,14 @@ export default function LeaderboardPage() {
 
             return (
               <div
-                key={entry?.id ?? `empty-${index}`}
+                key={entry?.id ?? empty-${index}}
                 style={{
-                  minHeight: "220px",
+                  minHeight: "210px",
                   borderRadius: "22px",
                   padding: "22px",
                   background:
                     index === 0
-                      ? "linear-gradient(180deg, rgba(250,204,21,0.18), rgba(255,255,255,0.06))"
+                      ? "linear-gradient(180deg, rgba(250,204,21,0.20), rgba(255,255,255,0.06))"
                       : "rgba(255,255,255,0.07)",
                   border:
                     index === 0
@@ -229,15 +206,15 @@ export default function LeaderboardPage() {
                     </div>
 
                     <div style={{ fontSize: "30px", fontWeight: 700, marginBottom: "8px" }}>
-                      {entry.score} pts
+                      {entry.rankScore} pts
                     </div>
 
                     <div style={{ fontSize: "22px", fontWeight: 700, marginBottom: "6px" }}>
-                      {entry.teamName}
+                      {entry.managerName}
                     </div>
 
                     <div style={{ color: "#cbd5e1", marginBottom: "14px" }}>
-                      {entry.managerName}
+                      {entry.players.length} spelers
                     </div>
 
                     <div
@@ -251,7 +228,7 @@ export default function LeaderboardPage() {
                       }}
                     >
                       <span>Value: R{entry.totalCost}m</span>
-                      <span>{entry.players.length} players</span>
+                      <span>{entry.createdAt}</span>
                     </div>
                   </>
                 ) : (
@@ -274,7 +251,7 @@ export default function LeaderboardPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "90px 1.4fr 1fr 120px 120px 150px",
+              gridTemplateColumns: "90px 1.2fr 1.8fr 120px 120px 150px",
               gap: "12px",
               padding: "18px 20px",
               borderBottom: "1px solid rgba(255,255,255,0.08)",
@@ -286,8 +263,8 @@ export default function LeaderboardPage() {
             }}
           >
             <div>Rank</div>
-            <div>Team</div>
             <div>Manager</div>
+            <div>Players</div>
             <div>Score</div>
             <div>Value</div>
             <div>Updated</div>
@@ -309,7 +286,7 @@ export default function LeaderboardPage() {
                 key={entry.id}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "90px 1.4fr 1fr 120px 120px 150px",
+                  gridTemplateColumns: "90px 1.2fr 1.8fr 120px 120px 150px",
                   gap: "12px",
                   padding: "18px 20px",
                   borderBottom:
@@ -317,64 +294,26 @@ export default function LeaderboardPage() {
                       ? "none"
                       : "1px solid rgba(255,255,255,0.06)",
                   alignItems: "center",
+                  background:
+                    index === 0 ? "rgba(250,204,21,0.06)" : "transparent",
                 }}
               >
                 <div style={{ fontWeight: 700, fontSize: "20px", color: "#facc15" }}>
                   #{index + 1}
                 </div>
 
-                <div>
-                  <div style={{ fontWeight: 700, marginBottom: "4px" }}>{entry.teamName}</div>
-                  <div style={{ color: "#94a3b8", fontSize: "14px" }}>
-                    {entry.players.map((player) => player.name).join(" • ")}
-                  </div>
+                <div style={{ fontWeight: 700 }}>{entry.managerName}</div>
+
+                <div style={{ color: "#cbd5e1", fontSize: "14px" }}>
+                  {entry.players.map((player) => player.name).join(" • ")}
                 </div>
 
-                <div style={{ color: "#e5e7eb" }}>{entry.managerName}</div>
-                <div style={{ fontWeight: 700 }}>{entry.score}</div>
+                <div style={{ fontWeight: 700 }}>{entry.rankScore}</div>
                 <div>R{entry.totalCost}m</div>
                 <div style={{ color: "#94a3b8" }}>{entry.createdAt}</div>
               </div>
             ))
           )}
-        </div>
-
-        <div
-          style={{
-            marginTop: "22px",
-            display: "flex",
-            gap: "14px",
-            flexWrap: "wrap",
-          }}
-        >
-          <Link
-            href="/team"
-            style={{
-              textDecoration: "none",
-              background: "#facc15",
-              color: "#0b1020",
-              padding: "14px 18px",
-              borderRadius: "12px",
-              fontWeight: 700,
-            }}
-          >
-            Build Team
-          </Link>
-
-          <Link
-            href="/login"
-            style={{
-              textDecoration: "none",
-              background: "transparent",
-              color: "white",
-              padding: "14px 18px",
-              borderRadius: "12px",
-              border: "1px solid rgba(255,255,255,0.16)",
-              fontWeight: 700,
-            }}
-          >
-            Login
-          </Link>
         </div>
       </div>
     </main>
