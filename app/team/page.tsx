@@ -71,23 +71,41 @@ export default function TeamPage() {
     );
   }
 
-  async function saveTeam() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
+async function saveTeam() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedTeam));
 
-      const { error } = await supabase.from("teams").insert([
-        {
-          user_id: crypto.randomUUID(),
-          team: selectedTeam,
-          total_cost: totalCost,
-        },
-      ]);
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-      if (error) {
-        console.log(error);
-        alert("Error saving team");
-        return;
-      }
+    if (userError || !user) {
+      alert("Log eers in.");
+      window.location.href = "/login";
+      return;
+    }
+
+    const { error } = await supabase.from("teams").insert([
+      {
+        user_id: user.id,
+        team: selectedTeam,
+        total_cost: totalCost,
+      },
+    ]);
+
+    if (error) {
+      console.log(error);
+      alert("Error saving team");
+      return;
+    }
+
+    alert("Team saved!");
+  } catch (error) {
+    console.log(error);
+    alert("Error saving team");
+  }
+}
 
       alert("Team saved!");
     } catch (error) {
