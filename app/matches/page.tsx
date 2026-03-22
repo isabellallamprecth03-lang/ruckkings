@@ -135,7 +135,7 @@ export default function MatchesPage() {
         const results = await Promise.all(
           matches.map(async (match) => {
             const response = await fetch(
-              https://api.open-meteo.com/v1/forecast?latitude=${match.latitude}&longitude=${match.longitude}&current=temperature_2m,weather_code,wind_speed_10m
+              `https://api.open-meteo.com/v1/forecast?latitude=${match.latitude}&longitude=${match.longitude}&current=temperature_2m,weather_code,wind_speed_10m`
             );
 
             const data = await response.json();
