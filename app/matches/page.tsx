@@ -16,14 +16,14 @@ type Weather = {
 
 const matches: Match[] = [
   { id: 1, home: "Bulls", away: "Sharks", lat: -25.75, lon: 28.22 },
-  { id: 2, home: "Stormers", away: "Lions", lat: -33.90, lon: 18.41 },
+  { id: 2, home: "Stormers", away: "Lions", lat: -33.9, lon: 18.41 },
 ];
 
 export default function MatchesPage() {
   const [weather, setWeather] = useState<Record<number, Weather>>({});
 
   useEffect(() => {
-    async function load() {
+    async function loadWeather() {
       const results = await Promise.all(
         matches.map(async (m) => {
           const res = await fetch(
@@ -48,7 +48,7 @@ export default function MatchesPage() {
       setWeather(map);
     }
 
-    load();
+    loadWeather();
   }, []);
 
   return (
