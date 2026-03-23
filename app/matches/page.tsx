@@ -99,71 +99,7 @@ type PredictionsState = Record<number, PredictionEntry[]>;
 
 const STORAGE_KEY = "ruckkings_predictions_v4";
 const MAX_ENTRIES_PER_MATCH = 3;
-const matches: Match[] = [
-  {
-    id: 1,
-    stage: "Pool",
-    home: "South Africa",
-    away: "New Zealand",
-    stadium: "Cape Town Stadium",
-    location: "Cape Town, South Africa",
-    capacity: "55,000",
-    summary:
-      "A world-class multi-purpose venue with one of the most iconic backdrops in global sport.",
-    homeGround:
-      "Not a permanent club home ground, but one of South Africa’s premier international rugby venues.",
-    kickoff: "10 Sep 2027 • 18:00",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Cape_Town_Stadium.jpg",
-  },
-  {
-    id: 2,
-    stage: "Pool",
-    home: "England",
-    away: "France",
-    stadium: "Twickenham Stadium",
-    location: "London, England",
-    capacity: "82,000",
-    summary:
-      "One of the most famous rugby stadiums in the world and a landmark venue for major test matches.",
-    homeGround: "Traditional home of England Rugby.",
-    kickoff: "12 Sep 2027 • 20:00",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/5c/Twickenham_Stadium.jpg",
-  },
-  {
-    id: 3,
-    stage: "Playoff",
-    home: "Ireland",
-    away: "Australia",
-    stadium: "Stadium Australia",
-    location: "Sydney, Australia",
-    capacity: "83,500",
-    summary:
-      "A major finals venue built for global tournaments and large-scale international events.",
-    homeGround:
-      "Not a regular domestic home ground, but one of Australia’s flagship finals venues.",
-    kickoff: "20 Oct 2027 • 19:30",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/50/Stadium_Australia.jpg",
-  },
-  {
-    id: 4,
-    stage: "Final",
-    home: "South Africa",
-    away: "France",
-    stadium: "Melbourne Cricket Ground",
-    location: "Melbourne, Australia",
-    capacity: "100,000",
-    summary:
-      "One of the largest and most celebrated sporting stadiums in the world, designed for iconic occasions.",
-    homeGround:
-      "Primarily a cricket and Australian rules venue, but legendary as a world-class event stadium.",
-    kickoff: "30 Oct 2027 • 19:30",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/6/62/Melbourne_Cricket_Ground_%28MCG%29.jpg",
-  },
-];
+
 
 function getStagePrize(stage: MatchStage) {
   if (stage === "Pool") return "R10,000";
