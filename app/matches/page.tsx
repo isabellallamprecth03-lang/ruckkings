@@ -18,7 +18,7 @@ function getEntryFee(stage: string) {
 }
 type MatchStage = "Pool" | "Playoff" | "Final";
 
-const matches: Match[] = [
+const matches = [
   {
     id: 1,
     stage: "Pool",
