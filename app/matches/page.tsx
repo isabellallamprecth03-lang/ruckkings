@@ -18,19 +18,76 @@ function getEntryFee(stage: string) {
 }
 type MatchStage = "Pool" | "Playoff" | "Final";
 
-type Match = {
-  id: number;
-  stage: MatchStage;
-  home: string;
-  away: string;
-  stadium: string;
-  location: string;
-  capacity: string;
-  summary: string;
-  homeGround: string;
-  kickoff: string;
-  image: string;
-};
+const matches: Match[] = [
+  {
+    id: 1,
+    stage: "Pool",
+    home: "South Africa",
+    away: "New Zealand",
+    stadium: "Cape Town Stadium",
+    location: "Cape Town, South Africa",
+    capacity: "55,000",
+    summary:
+      "One of the most iconic stadiums in the world, set between Table Mountain and the Atlantic Ocean.",
+    homeGround: "Used for major Springbok tests and international events.",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Cape_Town_Stadium.jpg",
+    kickoff: "10 Sep 2027 • 18:00",
+    lat: -33.9036,
+    lng: 18.4115,
+  },
+  {
+    id: 2,
+    stage: "Pool",
+    home: "England",
+    away: "France",
+    stadium: "Twickenham Stadium",
+    location: "London, England",
+    capacity: "82,000",
+    summary:
+      "The home of England Rugby and one of the most historic rugby stadiums globally.",
+    homeGround: "Official home of England Rugby.",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/5/5c/Twickenham_Stadium.jpg",
+    kickoff: "12 Sep 2027 • 20:00",
+    lat: 51.4553,
+    lng: -0.3410,
+  },
+  {
+    id: 3,
+    stage: "Playoff",
+    home: "Ireland",
+    away: "Australia",
+    stadium: "Stadium Australia",
+    location: "Sydney, Australia",
+    capacity: "83,500",
+    summary:
+      "A world-class Olympic stadium that hosts major finals and international events.",
+    homeGround: "Used for major Australian international fixtures.",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/5/50/Stadium_Australia.jpg",
+    kickoff: "20 Oct 2027 • 19:30",
+    lat: -33.8474,
+    lng: 151.0634,
+  },
+  {
+    id: 4,
+    stage: "Final",
+    home: "South Africa",
+    away: "France",
+    stadium: "Melbourne Cricket Ground",
+    location: "Melbourne, Australia",
+    capacity: "100,000",
+    summary:
+      "One of the largest stadiums in the world and home to historic global sporting events.",
+    homeGround: "Primarily cricket and AFL, but iconic for global finals.",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/6/62/Melbourne_Cricket_Ground_%28MCG%29.jpg",
+    kickoff: "30 Oct 2027 • 19:30",
+    lat: -37.8199,
+    lng: 144.9834,
+  },
+];
 
 type PredictionEntry = {
   entryNumber: number;
