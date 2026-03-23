@@ -787,7 +787,9 @@ export default function MatchesPage() {
                                 cursor: isSaving ? "not-allowed" : "pointer",
                               }}
                             >
-                              {isSaving ? "Saving..." : "Save This Entry"}
+                              {isSaving
+                                ? "Processing..."
+                                : `Pay & Enter (R${getEntryFee(match.stage)})`}
                             </button>
                           </div>
                         );
