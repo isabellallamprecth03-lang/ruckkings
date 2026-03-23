@@ -706,7 +706,7 @@ export default function MatchesPage() {
                       <div style={{ fontWeight: 800 }}>{match.stadium}
                       </div>
                       <a
-                        href={https://www.google.com/maps?q=${match.lat},${match.lng}}
+                        href={`https://www.google.com/maps?q=${match.lat},${match.lng}`}
                         target="_blank"
                         style={{
                           display: "inline-block",
