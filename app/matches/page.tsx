@@ -721,7 +721,7 @@ export default function MatchesPage() {
                               <input
                                 type="number"
                                 value={entry.homeScore}
-                                placeholder={${match.home} score}
+                                placeholder={'${match.home} score'}
                                 onChange={(e) =>
                                   updateEntry(
                                     match.id,
