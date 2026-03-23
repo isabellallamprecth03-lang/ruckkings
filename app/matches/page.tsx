@@ -99,7 +99,7 @@ type PredictionsState = Record<number, PredictionEntry[]>;
 
 const STORAGE_KEY = "ruckkings_predictions_v4";
 const MAX_ENTRIES_PER_MATCH = 3;
-const matches = [] = [
+const matches: = [] = [
   {
     id: 1,
     stage: "Pool",
