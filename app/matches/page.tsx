@@ -70,7 +70,7 @@ export default function MatchesPage() {
           minute:
             item?.game?.status?.elapsed !== null &&
             item?.game?.status?.elapsed !== undefined
-              ? ${item.game.status.elapsed}'
+              ? `${item.game.status.elapsed}`'
               : "",
         }));
 
