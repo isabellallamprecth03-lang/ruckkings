@@ -3,11 +3,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   const body = await req.json();
 
-  const {
-    amount,
-    item_name,
-    email,
-  } = body;
+  const { amount, item_name, email } = body;
 
   const merchant_id = process.env.NEXT_PUBLIC_PAYFAST_MERCHANT_ID!;
   const merchant_key = process.env.NEXT_PUBLIC_PAYFAST_MERCHANT_KEY!;
