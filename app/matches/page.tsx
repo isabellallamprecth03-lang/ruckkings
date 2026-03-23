@@ -609,7 +609,7 @@ export default function MatchesPage() {
                           marginBottom: "10px",
                         }}
                       >
-                        {match.stage} Match • Prize {getStagePrize(match.stage)}
+                        {match.stage} Match • Prize {getStagePrize(match.stage as any)}
                       </div>
 
                       <h2 style={{ margin: "0 0 8px", fontSize: "34px" }}>
