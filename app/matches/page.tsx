@@ -228,7 +228,7 @@ export default function MatchesPage() {
     }, 2500);
   }
 
-  async function savePrediction(match: Match, entry: PredictionEntry) {
+  async function savePrediction(match: any, entry: PredictionEntry) {
     if (!entry.homeScore || !entry.awayScore) {
       alert("Please enter both scores.");
       return;
