@@ -79,7 +79,9 @@ export default function MatchesPage() {
         }
       } catch (error) {
         if (!cancelled) {
-          setErrorText(error instanceof Error ? error.message : "Something went wrong");
+          setErrorText(
+            error instanceof Error ? error.message : "Something went wrong"
+          );
         }
       } finally {
         if (!cancelled) {
@@ -200,13 +202,27 @@ export default function MatchesPage() {
                     alignItems: "center",
                   }}
                 >
-                  <div style={{ fontSize: "22px", fontWeight: 700 }}>{match.home}</div>
+                  <div style={{ fontSize: "22px", fontWeight: 700 }}>
+                    {match.home}
+                  </div>
 
-                  <div style={{ fontSize: "30px", fontWeight: 800, color: "#facc15" }}>
+                  <div
+                    style={{
+                      fontSize: "30px",
+                      fontWeight: 800,
+                      color: "#facc15",
+                    }}
+                  >
                     {match.homeScore} - {match.awayScore}
                   </div>
 
-                  <div style={{ fontSize: "22px", fontWeight: 700, textAlign: "right" }}>
+                  <div
+                    style={{
+                      fontSize: "22px",
+                      fontWeight: 700,
+                      textAlign: "right",
+                    }}
+                  >
                     {match.away}
                   </div>
                 </div>
