@@ -249,7 +249,7 @@ export default function MatchesPage() {
     setSavingEntryKey("");
 
     if (error) {
-      alert(Error saving prediction: ${error.message});
+      alert(`Error saving prediction: ${error.message}`);
       return;
     }
 
