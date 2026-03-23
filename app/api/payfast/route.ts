@@ -21,6 +21,6 @@ export async function POST(req: Request) {
   });
 
   return NextResponse.json({
-    url: https://www.payfast.co.za/eng/process?${paymentData.toString()},
+    url: `https://www.payfast.co.za/eng/process?${paymentData.toString()}`,
   });
 }
