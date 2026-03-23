@@ -230,7 +230,7 @@ export default function MatchesPage() {
       return;
     }
 
-    const entryKey = ${match.id}-${entry.entryNumber};
+    const entryKey = '${match.id}-${entry.entryNumber}';
     setSavingEntryKey(entryKey);
 
     const { error } = await supabase.from("predictions").insert({
