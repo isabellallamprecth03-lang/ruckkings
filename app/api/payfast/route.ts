@@ -15,9 +15,9 @@ export async function POST(req: Request) {
     amount: amount.toString(),
     item_name,
     email_address: email,
-    return_url: ${base_url}/success,
-    cancel_url: ${base_url}/cancel,
-    notify_url: ${base_url}/api/payfast-webhook,
+    return_url: '${base_url}/success',
+    cancel_url: '${base_url}/cancel',
+    notify_url: '${base_url}/api/payfast-webhook',
   });
 
   return NextResponse.json({
