@@ -4,6 +4,18 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
+function getEntryFee(stage: string) {
+  switch (stage) {
+    case "Pool":
+      return 100;
+    case "Playoff":
+      return 200;
+    case "Final":
+      return 300;
+    default:
+      return 100;
+  }
+}
 type MatchStage = "Pool" | "Playoff" | "Final";
 
 type Match = {
