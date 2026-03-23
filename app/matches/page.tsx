@@ -669,7 +669,7 @@ export default function MatchesPage() {
 
                     <div style={{ display: "grid", gap: "14px" }}>
                       {entries.map((entry) => {
-                        const entryKey = ${match.id}-${entry.entryNumber};
+                        const entryKey = '${match.id}-${entry.entryNumber}';
                         const isSaving = savingEntryKey === entryKey;
 
                         return (
