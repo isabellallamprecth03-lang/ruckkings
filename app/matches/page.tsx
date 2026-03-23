@@ -742,7 +742,7 @@ export default function MatchesPage() {
                               <input
                                 type="number"
                                 value={entry.awayScore}
-                                placeholder={${match.away} score}
+                                placeholder={'${match.away} score'}
                                 onChange={(e) =>
                                   updateEntry(
                                     match.id,
