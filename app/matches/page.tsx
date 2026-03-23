@@ -703,7 +703,21 @@ export default function MatchesPage() {
                       <div style={{ color: "#94a3b8", fontSize: "13px", marginBottom: "6px" }}>
                         Stadium
                       </div>
-                      <div style={{ fontWeight: 800 }}>{match.stadium}</div>
+                      <div style={{ fontWeight: 800 }}>{match.stadium}
+                      </div>
+                      <a
+                        href={https://www.google.com/maps?q=${match.lat},${match.lng}}
+                        target="_blank"
+                        style={{
+                          display: "inline-block",
+                          marginTop: "8px",
+                          color: "#38bdf8",
+                          fontWeight: 700,
+                          textDecoration: "none",
+                        }}
+                      >
+                        View on Map →
+                      </a>
                       <div style={{ color: "#cbd5e1", marginTop: "6px" }}>{match.location}</div>
                       <div style={{ color: "#cbd5e1", marginTop: "6px" }}>
                         Capacity: {match.capacity}
