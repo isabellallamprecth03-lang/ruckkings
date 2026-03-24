@@ -378,7 +378,7 @@ export default function MatchesPage() {
                 >
                   <span
                     style={{
-                      diplay: "inline-block",
+                      display: "inline-block",
                       background: "#3b82f6",
                       color: "white",
                       border: "none",
