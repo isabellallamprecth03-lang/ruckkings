@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 type Stadium = {
+  slug: string;
   name: string;
   city: string;
   capacity: string;
@@ -12,6 +13,7 @@ type Stadium = {
 
 const stadiums: Stadium[] = [
   {
+    slug: "stadium-australia",
     name: "Stadium Australia",
     city: "Sydney",
     capacity: "83,500",
@@ -21,6 +23,7 @@ const stadiums: Stadium[] = [
       "Australia’s largest stadium and one of the biggest stages in world sport. Built for iconic finals and unforgettable World Cup moments.",
   },
   {
+    slug: "melbourne-cricket-ground",
     name: "Melbourne Cricket Ground",
     city: "Melbourne",
     capacity: "100,000",
@@ -30,6 +33,7 @@ const stadiums: Stadium[] = [
       "One of the most iconic stadiums in the world, combining history, scale and massive-event energy.",
   },
   {
+    slug: "perth-stadium",
     name: "Perth Stadium",
     city: "Perth",
     capacity: "61,000",
@@ -39,6 +43,7 @@ const stadiums: Stadium[] = [
       "A modern architectural masterpiece with elite lighting, steep stands and a premium big-match atmosphere.",
   },
   {
+    slug: "suncorp-stadium",
     name: "Suncorp Stadium",
     city: "Brisbane",
     capacity: "52,500",
@@ -48,6 +53,7 @@ const stadiums: Stadium[] = [
       "Widely regarded as one of the best rugby stadiums in the world. Compact, loud and built for intensity.",
   },
   {
+    slug: "adelaide-oval",
     name: "Adelaide Oval",
     city: "Adelaide",
     capacity: "53,500",
@@ -84,14 +90,6 @@ export default function StadiumsPage() {
           animation-delay: 0.22s;
         }
 
-        .fadeUpDelay3 {
-          animation-delay: 0.34s;
-        }
-
-        .heroGlow {
-          animation: heroGlow 4s ease-in-out infinite;
-        }
-
         .stadiumCard {
           transition:
             transform 0.28s ease,
@@ -119,41 +117,6 @@ export default function StadiumsPage() {
           transform: scale(1.06);
         }
 
-        .glassCard {
-          transition:
-            transform 0.28s ease,
-            box-shadow 0.28s ease,
-            border-color 0.28s ease;
-        }
-
-        .glassCard:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 22px 50px rgba(0, 0, 0, 0.35);
-          border-color: rgba(255, 255, 255, 0.12);
-        }
-
-        .mapButton {
-          transition:
-            transform 0.2s ease,
-            box-shadow 0.2s ease,
-            opacity 0.2s ease;
-        }
-
-        .mapButton:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 24px rgba(250, 204, 21, 0.2);
-          opacity: 0.96;
-        }
-
-        .scrollRow::-webkit-scrollbar {
-          height: 8px;
-        }
-
-        .scrollRow::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.12);
-          border-radius: 999px;
-        }
-
         @keyframes fadeUp {
           from {
             opacity: 0;
@@ -165,16 +128,13 @@ export default function StadiumsPage() {
           }
         }
 
-        @keyframes heroGlow {
-          0% {
-            box-shadow: 0 26px 70px rgba(0, 0, 0, 0.46);
-          }
-          50% {
-            box-shadow: 0 30px 85px rgba(250, 204, 21, 0.08);
-          }
-          100% {
-            box-shadow: 0 26px 70px rgba(0, 0, 0, 0.46);
-          }
+        .scrollRow::-webkit-scrollbar {
+          height: 8px;
+        }
+
+        .scrollRow::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.12);
+          border-radius: 999px;
         }
       `}</style>
 
@@ -199,175 +159,44 @@ export default function StadiumsPage() {
         </div>
 
         <div
-          className="fadeUp fadeUpDelay1 heroGlow"
+          className="fadeUp fadeUpDelay1"
           style={{
-            position: "relative",
-            height: "350px",
-            borderRadius: "30px",
-            overflow: "hidden",
             marginTop: "22px",
+            borderRadius: "28px",
+            padding: "30px",
+            background:
+              "linear-gradient(135deg, rgba(250,204,21,0.12), rgba(59,130,246,0.08), rgba(15,23,42,0.98))",
             border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 26px 70px rgba(0,0,0,0.46)",
+            boxShadow: "0 22px 60px rgba(0,0,0,0.28)",
           }}
         >
-          <img
-            src={stadiums[0].image}
-            alt={stadiums[0].name}
+          <h1
             style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(90deg, rgba(2,6,23,0.88) 0%, rgba(2,6,23,0.56) 45%, rgba(2,6,23,0.20) 100%)",
-            }}
-          />
-
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "radial-gradient(circle at 15% 18%, rgba(250,204,21,0.16), transparent 22%), radial-gradient(circle at 82% 20%, rgba(59,130,246,0.10), transparent 24%)",
-            }}
-          />
-
-          <div
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              padding: "28px",
+              fontSize: "52px",
+              lineHeight: 0.98,
+              margin: "0 0 12px",
+              letterSpacing: "-0.05em",
             }}
           >
-            <div
-              style={{
-                display: "inline-block",
-                padding: "7px 12px",
-                borderRadius: "999px",
-                background: "rgba(250,204,21,0.14)",
-                color: "#facc15",
-                fontWeight: 800,
-                fontSize: "12px",
-                marginBottom: "12px",
-                border: "1px solid rgba(250,204,21,0.16)",
-              }}
-            >
-              FEATURED VENUE
-            </div>
+            Official World Cup Stadiums
+          </h1>
 
-            <h1
-              style={{
-                margin: "0 0 8px",
-                fontSize: "48px",
-                lineHeight: 0.98,
-                letterSpacing: "-0.05em",
-              }}
-            >
-              {stadiums[0].name}
-            </h1>
-
-            <div style={{ color: "#cbd5e1", fontSize: "16px", marginBottom: "10px" }}>
-              {stadiums[0].city} • Capacity {stadiums[0].capacity}
-            </div>
-
-            <p
-              style={{
-                margin: 0,
-                maxWidth: "680px",
-                color: "#e2e8f0",
-                lineHeight: 1.75,
-                fontSize: "16px",
-              }}
-            >
-              {stadiums[0].description}
-            </p>
-          </div>
+          <p
+            style={{
+              color: "#cbd5e1",
+              maxWidth: "820px",
+              fontSize: "17px",
+              lineHeight: 1.75,
+              margin: 0,
+            }}
+          >
+            Explore the venues that give Rugby World Cup 2027 its scale, emotion and
+            atmosphere. Tap any stadium to open a full detail page.
+          </p>
         </div>
 
         <div
-          className="fadeUp fadeUpDelay2"
-          style={{
-            marginTop: "18px",
-            display: "grid",
-            gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-            gap: "14px",
-          }}
-        >
-          <div
-            className="glassCard"
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              borderRadius: "18px",
-              padding: "16px",
-              border: "1px solid rgba(255,255,255,0.08)",
-              backdropFilter: "blur(10px)",
-            }}
-          >
-            <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "6px" }}>
-              Host Nation
-            </div>
-            <div style={{ fontSize: "24px", fontWeight: 900 }}>Australia</div>
-          </div>
-
-          <div
-            className="glassCard"
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              borderRadius: "18px",
-              padding: "16px",
-              border: "1px solid rgba(255,255,255,0.08)",
-              backdropFilter: "blur(10px)",
-            }}
-          >
-            <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "6px" }}>
-              Venue Focus
-            </div>
-            <div style={{ fontSize: "24px", fontWeight: 900 }}>Elite Stadiums</div>
-          </div>
-
-          <div
-            className="glassCard"
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              borderRadius: "18px",
-              padding: "16px",
-              border: "1px solid rgba(255,255,255,0.08)",
-              backdropFilter: "blur(10px)",
-            }}
-          >
-            <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "6px" }}>
-              Matchday Feel
-            </div>
-            <div style={{ fontSize: "24px", fontWeight: 900 }}>Broadcast Style</div>
-          </div>
-
-          <div
-            className="glassCard"
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              borderRadius: "18px",
-              padding: "16px",
-              border: "1px solid rgba(255,255,255,0.08)",
-              backdropFilter: "blur(10px)",
-            }}
-          >
-            <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "6px" }}>
-              Experience
-            </div>
-            <div style={{ fontSize: "24px", fontWeight: 900 }}>Premium UI</div>
-          </div>
-        </div>
-
-        <div
-          className="fadeUp fadeUpDelay3 scrollRow"
+          className="fadeUp fadeUpDelay2 scrollRow"
           style={{
             display: "flex",
             overflowX: "auto",
@@ -377,131 +206,77 @@ export default function StadiumsPage() {
           }}
         >
           {stadiums.map((stadium, i) => (
-            <div
+            <Link
               key={i}
-              className="stadiumCard"
-              style={{
-                minWidth: "320px",
-                borderRadius: "24px",
-                overflow: "hidden",
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                backdropFilter: "blur(10px)",
-                boxShadow: "0 18px 40px rgba(0,0,0,0.24)",
-              }}
+              href={/stadiums/${stadium.slug}}
+              style={{ textDecoration: "none", color: "inherit" }}
             >
-              <div className="stadiumImageWrap" style={{ height: "190px" }}>
-                <img
-                  className="stadiumImage"
-                  src={stadium.image}
-                  alt={stadium.name}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    display: "block",
-                  }}
-                />
-              </div>
-
-              <div style={{ padding: "16px" }}>
-                <h3
-                  style={{
-                    margin: "0 0 4px",
-                    fontSize: "24px",
-                    lineHeight: 1.05,
-                    letterSpacing: "-0.03em",
-                  }}
-                >
-                  {stadium.name}
-                </h3>
-
-                <div style={{ color: "#94a3b8", fontSize: "14px" }}>
-                  {stadium.city} • {stadium.capacity}
+              <div
+                className="stadiumCard"
+                style={{
+                  minWidth: "320px",
+                  borderRadius: "24px",
+                  overflow: "hidden",
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  backdropFilter: "blur(10px)",
+                  boxShadow: "0 18px 40px rgba(0,0,0,0.24)",
+                }}
+              >
+                <div className="stadiumImageWrap" style={{ height: "190px" }}>
+                  <img
+                    className="stadiumImage"
+                    src={stadium.image}
+                    alt={stadium.name}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
                 </div>
 
-                <p
-                  style={{
-                    fontSize: "14px",
-                    marginTop: "10px",
-                    color: "#e2e8f0",
-                    lineHeight: 1.7,
-                  }}
-                >
-                  {stadium.description}
-                </p>
+                <div style={{ padding: "16px" }}>
+                  <h3
+                    style={{
+                      margin: "0 0 4px",
+                      fontSize: "24px",
+                      lineHeight: 1.05,
+                      letterSpacing: "-0.03em",
+                    }}
+                  >
+                    {stadium.name}
+                  </h3>
 
-                <button
-                  className="mapButton"
-                  style={{
-                    marginTop: "10px",
-                    background: "#facc15",
-                    color: "#111827",
-                    border: "none",
-                    borderRadius: "10px",
-                    padding: "10px 14px",
-                    fontWeight: 900,
-                    cursor: "pointer",
-                  }}
-                  onClick={() =>
-                    window.open(
-                      `https://www.google.com/maps/search/${stadium.name}`,
-                      "_blank"
-                    )
-                  }
-                >
-                  View Map
-                </button>
+                  <div style={{ color: "#94a3b8", fontSize: "14px" }}>
+                    {stadium.city} • {stadium.capacity}
+                  </div>
+
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      color: "#e2e8f0",
+                      lineHeight: 1.7,
+                    }}
+                  >
+                    {stadium.description}
+                  </p>
+
+                  <div
+                    style={{
+                      marginTop: "12px",
+                      color: "#facc15",
+                      fontWeight: 800,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Open Stadium Detail →
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        <div
-          className="fadeUp fadeUpDelay3"
-          style={{
-            display: "grid",
-            gap: "18px",
-            marginTop: "34px",
-          }}
-        >
-          {stadiums.map((stadium, i) => (
-            <div
-              key={i}
-              className="glassCard"
-              style={{
-                background: "rgba(255,255,255,0.04)",
-                borderRadius: "22px",
-                padding: "20px",
-                border: "1px solid rgba(255,255,255,0.07)",
-                boxShadow: "0 16px 36px rgba(0,0,0,0.18)",
-              }}
-            >
-              <h2
-                style={{
-                  margin: "0 0 6px",
-                  fontSize: "28px",
-                  letterSpacing: "-0.04em",
-                }}
-              >
-                {stadium.name}
-              </h2>
-
-              <div style={{ color: "#94a3b8", fontSize: "15px" }}>
-                {stadium.city} • Capacity {stadium.capacity}
-              </div>
-
-              <p
-                style={{
-                  marginTop: "10px",
-                  maxWidth: "760px",
-                  color: "#e2e8f0",
-                  lineHeight: 1.8,
-                }}
-              >
-                {stadium.description}
-              </p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
