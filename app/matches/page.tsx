@@ -616,7 +616,7 @@ export default function MatchesPage() {
                     <div style={{ display: "grid", gap: "14px" }}>
                       {entries.map((entry, entryIndex) => (
                         <div
-                          key={${match.id}-${entry.entryNumber}}
+                          key={'${match.id}-${entry.entryNumber}'}
                           className="glass-card"
                           style={{
                             background: "rgba(255,255,255,0.04)",
