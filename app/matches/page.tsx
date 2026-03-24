@@ -25,7 +25,7 @@ type PredictionEntry = {
 
 type PredictionsState = Record<number, PredictionEntry[]>;
 
-const STORAGE_KEY = "ruckkings_predictions_v6";
+const STORAGE_KEY = "ruckkings_predictions_v7";
 const MAX_ENTRIES_PER_MATCH = 3;
 
 const matches: Match[] = [
@@ -111,8 +111,10 @@ export default function MatchesPage() {
     }
   }, []);
 
-  function ensureMatchEntries(matchId: number) {
-    return predictions[matchId] || [{ entryNumber: 1, homeScore: "", awayScore: "" }];
+  function getEntries(matchId: number): PredictionEntry[] {
+    return predictions[matchId] || [
+      { entryNumber: 1, homeScore: "", awayScore: "" },
+    ];
   }
 
   function updateEntry(
@@ -182,196 +184,6 @@ export default function MatchesPage() {
         fontFamily: "Arial, sans-serif",
       }}
     >
-      <style jsx>{`
-        .page-enter {
-          animation: pageEnter 0.8s ease both;
-        }
-
-        .fade-up {
-          opacity: 0;
-          transform: translateY(28px);
-          animation: fadeUp 0.8s ease forwards;
-        }
-
-        .delay-1 {
-          animation-delay: 0.08s;
-        }
-
-        .delay-2 {
-          animation-delay: 0.16s;
-        }
-
-        .delay-3 {
-          animation-delay: 0.24s;
-        }
-
-        .delay-4 {
-          animation-delay: 0.34s;
-        }
-
-        .hero-shell {
-          animation: pulseGlow 4.5s ease-in-out infinite;
-        }
-
-        .hero-image {
-          animation: slowZoom 16s ease-in-out infinite alternate;
-        }
-
-        .glass-card {
-          transition:
-            transform 0.3s ease,
-            box-shadow 0.3s ease,
-            border-color 0.3s ease,
-            background 0.3s ease;
-        }
-
-        .glass-card:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 24px 56px rgba(0, 0, 0, 0.36);
-          border-color: rgba(255, 255, 255, 0.14);
-          background: rgba(255, 255, 255, 0.07);
-        }
-
-        .match-card {
-          position: relative;
-          overflow: hidden;
-          transition:
-            transform 0.32s ease,
-            box-shadow 0.32s ease,
-            border-color 0.32s ease,
-            background 0.32s ease;
-        }
-
-        .match-card:hover {
-          transform: translateY(-10px) scale(1.004);
-          box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
-          border-color: rgba(250, 204, 21, 0.2);
-          background: rgba(255, 255, 255, 0.07);
-        }
-
-        .match-card::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            120deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.06) 45%,
-            transparent 70%
-          );
-          transform: translateX(-120%);
-          transition: transform 0.8s ease;
-          pointer-events: none;
-        }
-
-        .match-card:hover::after {
-          transform: translateX(120%);
-        }
-
-        .image-wrap {
-          overflow: hidden;
-        }
-
-        .match-image {
-          transition: transform 0.7s ease, filter 0.4s ease;
-        }
-
-        .match-card:hover .match-image {
-          transform: scale(1.06);
-          filter: saturate(1.08);
-        }
-
-        .cta-chip,
-        .cta-button {
-          transition:
-            transform 0.2s ease,
-            box-shadow 0.2s ease,
-            opacity 0.2s ease;
-        }
-
-        .cta-chip:hover,
-        .cta-button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 14px 32px rgba(250, 204, 21, 0.14);
-          opacity: 0.97;
-        }
-
-        .cta-chip:active,
-        .cta-button:active {
-          transform: translateY(0) scale(0.98);
-        }
-
-        .score-input {
-          transition:
-            border-color 0.2s ease,
-            box-shadow 0.2s ease,
-            background 0.2s ease;
-        }
-
-        .score-input:focus {
-          outline: none;
-          border-color: rgba(250, 204, 21, 0.6);
-          box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.12);
-          background: rgba(255, 255, 255, 0.08);
-        }
-
-        .rules-modal {
-          animation: fadeIn 0.25s ease;
-        }
-
-        @keyframes pageEnter {
-          from {
-            opacity: 0;
-            transform: scale(0.99);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @keyframes fadeUp {
-          from {
-            opacity: 0;
-            transform: translateY(28px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes pulseGlow {
-          0% {
-            box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
-          }
-          50% {
-            box-shadow: 0 30px 86px rgba(250, 204, 21, 0.08);
-          }
-          100% {
-            box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
-          }
-        }
-
-        @keyframes slowZoom {
-          from {
-            transform: scale(1);
-          }
-          to {
-            transform: scale(1.05);
-          }
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-      `}</style>
-
       <div
         className="page-enter"
         style={{ maxWidth: "1240px", margin: "0 auto", padding: "22px 20px 80px" }}
@@ -582,7 +394,7 @@ export default function MatchesPage() {
           }}
         >
           <button
-            className="cta-chip"
+            className="cta-button"
             onClick={() => setShowRules(true)}
             style={{
               background: "#facc15",
@@ -598,7 +410,7 @@ export default function MatchesPage() {
           </button>
 
           <button
-            className="cta-chip"
+            className="cta-button"
             onClick={savePredictionsLocally}
             style={{
               background: "#22c55e",
@@ -615,7 +427,7 @@ export default function MatchesPage() {
 
           <Link href="/stadiums" style={{ textDecoration: "none" }}>
             <span
-              className="cta-chip"
+              className="cta-button"
               style={{
                 display: "inline-block",
                 background: "#3b82f6",
@@ -661,24 +473,24 @@ export default function MatchesPage() {
           }}
         >
           {matches.map((match, matchIndex) => {
-            const entries = ensureMatchEntries(match.id);
+            const entries = getEntries(match.id);
 
             return (
               <section
                 key={match.id}
-                className="match-card"
+                className="lift-card"
                 style={{
                   background: "rgba(255,255,255,0.05)",
                   borderRadius: "26px",
                   overflow: "hidden",
                   border: "1px solid rgba(255,255,255,0.08)",
                   boxShadow: "0 18px 40px rgba(0,0,0,0.24)",
-                  animationDelay: '${0.12 * matchIndex}s',
+                  animationDelay: ${0.12 * matchIndex}s,
                 }}
               >
                 <div className="image-wrap" style={{ position: "relative", height: "240px" }}>
                   <img
-                    className="match-image"
+                    className="zoom-image"
                     src={match.image}
                     alt={match.stadium}
                     style={{
@@ -804,7 +616,7 @@ export default function MatchesPage() {
                     <div style={{ display: "grid", gap: "14px" }}>
                       {entries.map((entry, entryIndex) => (
                         <div
-                          key={'${match.id}-${entry.entryNumber}'}
+                          key={${match.id}-${entry.entryNumber}}
                           className="glass-card"
                           style={{
                             background: "rgba(255,255,255,0.04)",
@@ -959,7 +771,6 @@ export default function MatchesPage() {
 
       {showRules ? (
         <div
-          className="rules-modal"
           style={{
             position: "fixed",
             inset: 0,
