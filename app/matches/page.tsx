@@ -373,8 +373,8 @@ export default function MatchesPage() {
                 </button>
                 
                 <Link 
-                  href="/stadiums">
-                  style={{
+                  href="/stadiums"
+                  style={{ textDecoration: "none" }}
                 >
                   <span
                     style={{
@@ -389,7 +389,7 @@ export default function MatchesPage() {
                     }}
   >
     🏟 Explore Stadiums
-  </button>
+  </span>
 </Link>
               </div>
 
