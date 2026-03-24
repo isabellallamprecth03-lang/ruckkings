@@ -1,0 +1,146 @@
+/* ===== RESET ===== */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #020617;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+/* ===== LEVEL 3 ANIMATIONS ===== */
+
+.page-enter {
+  animation: pageEnter 0.8s ease both;
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(28px);
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+.delay-5 { animation-delay: 0.4s; }
+
+.hero-shell {
+  animation: pulseGlow 4.5s ease-in-out infinite;
+}
+
+.hero-image {
+  animation: slowZoom 14s ease-in-out infinite alternate;
+}
+
+.glass-card {
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 56px rgba(0,0,0,0.36);
+  background: rgba(255,255,255,0.07);
+}
+
+.lift-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.32s ease;
+}
+
+.lift-card:hover {
+  transform: translateY(-10px) scale(1.005);
+  box-shadow: 0 28px 70px rgba(0,0,0,0.42);
+}
+
+.lift-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,0.06) 45%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.8s ease;
+}
+
+.lift-card:hover::after {
+  transform: translateX(120%);
+}
+
+.image-wrap {
+  overflow: hidden;
+}
+
+.zoom-image {
+  transition: transform 0.7s ease;
+}
+
+.lift-card:hover .zoom-image {
+  transform: scale(1.06);
+}
+
+.cta-button {
+  transition: all 0.2s ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+}
+
+.cta-button:active {
+  transform: scale(0.98);
+}
+
+.score-input:focus {
+  outline: none;
+  border-color: #facc15;
+}
+
+/* ===== KEYFRAMES ===== */
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 26px 70px rgba(0,0,0,0.42); }
+  50% { box-shadow: 0 30px 86px rgba(250,204,21,0.08); }
+  100% { box-shadow: 0 26px 70px rgba(0,0,0,0.42); }
+}
+
+@keyframes slowZoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
+}
