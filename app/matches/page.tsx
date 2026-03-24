@@ -371,6 +371,26 @@ export default function MatchesPage() {
                 >
                   Save All Predictions Locally
                 </button>
+                
+                <Link 
+                  href="/stadiums">
+                  style={{
+                >
+                  <span
+                    style={{
+                      diplay: "inline-block",
+                      background: "#3b82f6",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "12px",
+                      padding: "12px 18px",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                    }}
+  >
+    🏟 Explore Stadiums
+  </button>
+</Link>
               </div>
 
               <div style={{ marginTop: "16px", color: "#94a3b8", fontSize: "14px" }}>
