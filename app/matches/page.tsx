@@ -485,7 +485,7 @@ export default function MatchesPage() {
                   overflow: "hidden",
                   border: "1px solid rgba(255,255,255,0.08)",
                   boxShadow: "0 18px 40px rgba(0,0,0,0.24)",
-                  animationDelay: ${0.12 * matchIndex}s,
+                  animationDelay: '${0.12 * matchIndex}s',
                 }}
               >
                 <div className="image-wrap" style={{ position: "relative", height: "240px" }}>
