@@ -127,7 +127,7 @@ export default async function StadiumDetailPage({
             marginTop: "20px",
             border: "1px solid rgba(255,255,255,0.08)",
             boxShadow: "0 24px 70px rgba(0,0,0,0.34)",
-            backgroundImage: linear-gradient(90deg, rgba(2,6,23,0.94) 0%, rgba(2,6,23,0.72) 40%, rgba(2,6,23,0.28) 75%, rgba(2,6,23,0.18) 100%), url('${stadium.image}'),
+            backgroundImage: `linear-gradient(90deg, rgba(2,6,23,0.94) 0%, rgba(2,6,23,0.72) 40%, rgba(2,6,23,0.28) 75%, rgba(2,6,23,0.18) 100%), url('${stadium.image}')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
