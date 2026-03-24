@@ -445,7 +445,7 @@ export default function StadiumsPage() {
                   }}
                   onClick={() =>
                     window.open(
-                      https://www.google.com/maps/search/${stadium.name},
+                      `https://www.google.com/maps/search/${stadium.name}`,
                       "_blank"
                     )
                   }
