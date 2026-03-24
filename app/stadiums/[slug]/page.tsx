@@ -270,7 +270,7 @@ export default async function StadiumDetailPage({
             </div>
 
             <a
-              href=`{https://www.google.com/maps/search/${stadium.name}`}
+              href={`https://www.google.com/maps/search/${stadium.name}`}
               target="_blank"
               rel="noreferrer"
               style={{
