@@ -219,7 +219,7 @@ export default function StadiumsPage() {
                 </p>
 
                 <a
-                  href={https://www.google.com/maps?q=${stadium.lat},${stadium.lng}}
+                  href={`https://www.google.com/maps?q=${stadium.lat},${stadium.lng}`}
                   target="_blank"
                   rel="noreferrer"
                   style={{
