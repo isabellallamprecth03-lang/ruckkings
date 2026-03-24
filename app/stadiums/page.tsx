@@ -208,7 +208,7 @@ export default function StadiumsPage() {
           {stadiums.map((stadium, i) => (
             <Link
               key={i}
-              href={/stadiums/${stadium.slug}}
+              href={`/stadiums/${stadium.slug}`}
               style={{ textDecoration: "none", color: "inherit" }}
             >
               <div
