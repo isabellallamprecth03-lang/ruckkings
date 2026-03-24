@@ -8,31 +8,6 @@ export default function HomePage() {
       style={{
         minHeight: "100vh",
         background:
-          "radial-gradient(circle at top, #0f172a 0%, #020617 100%)",
-        color: "white",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <div style={{ maxWidth: "1240px", margin: "0 auto", padding: "28px 20px 80px" }}>
-        <section
-          style={{
-            position: "relative",
-            overflow: "hidden",
-            borderRadius: "28px",
-            border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 22px 60px rgba(0,0,0,0.28)",
-            background:
-              "linear-gradient(135deg, rgba(250,204,21,0.12), rgba(34,197,94,0.08), rgba(15,…
-[6:12 PM, 3/24/2026] Liefie Lamprecht: "use client";
-
-import Link from "next/link";
-
-export default function HomePage() {
-  return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background:
           "radial-gradient(circle at top, #111827 0%, #020617 55%, #01030a 100%)",
         color: "white",
         fontFamily: "Arial, sans-serif",
