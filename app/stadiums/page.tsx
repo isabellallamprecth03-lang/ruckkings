@@ -70,57 +70,152 @@ export default function StadiumsPage() {
       style={{
         minHeight: "100vh",
         background:
-          "radial-gradient(circle at top, #0f172a 0%, #020617 55%, #01030a 100%)",
+          "radial-gradient(circle at top, #111827 0%, #020617 55%, #01030a 100%)",
         color: "white",
         fontFamily: "Arial, sans-serif",
       }}
     >
       <style jsx>{`
-        .fadeUp {
+        .page-enter {
+          animation: pageEnter 0.8s ease both;
+        }
+
+        .fade-up {
           opacity: 0;
-          transform: translateY(26px);
+          transform: translateY(28px);
           animation: fadeUp 0.8s ease forwards;
         }
 
-        .fadeUpDelay1 {
-          animation-delay: 0.12s;
+        .delay-1 {
+          animation-delay: 0.08s;
         }
 
-        .fadeUpDelay2 {
-          animation-delay: 0.22s;
+        .delay-2 {
+          animation-delay: 0.16s;
         }
 
-        .stadiumCard {
+        .delay-3 {
+          animation-delay: 0.24s;
+        }
+
+        .hero-shell {
+          animation: pulseGlow 4.5s ease-in-out infinite;
+        }
+
+        .hero-image {
+          animation: slowZoom 14s ease-in-out infinite alternate;
+        }
+
+        .glass-card {
           transition:
-            transform 0.28s ease,
-            box-shadow 0.28s ease,
-            border-color 0.28s ease,
-            background 0.28s ease;
+            transform 0.3s ease,
+            box-shadow 0.3s ease,
+            border-color 0.3s ease,
+            background 0.3s ease;
         }
 
-        .stadiumCard:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 26px 60px rgba(0, 0, 0, 0.42);
-          border-color: rgba(250, 204, 21, 0.22);
+        .glass-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 24px 56px rgba(0, 0, 0, 0.36);
+          border-color: rgba(255, 255, 255, 0.14);
           background: rgba(255, 255, 255, 0.07);
         }
 
-        .stadiumImageWrap {
+        .stadium-link {
+          text-decoration: none;
+          color: inherit;
+        }
+
+        .stadium-card {
+          position: relative;
+          overflow: hidden;
+          transition:
+            transform 0.32s ease,
+            box-shadow 0.32s ease,
+            border-color 0.32s ease,
+            background 0.32s ease;
+        }
+
+        .stadium-card:hover {
+          transform: translateY(-10px) scale(1.01);
+          box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
+          border-color: rgba(250, 204, 21, 0.24);
+          background: rgba(255, 255, 255, 0.07);
+        }
+
+        .stadium-card::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            120deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.06) 45%,
+            transparent 70%
+          );
+          transform: translateX(-120%);
+          transition: transform 0.8s ease;
+          pointer-events: none;
+        }
+
+        .stadium-card:hover::after {
+          transform: translateX(120%);
+        }
+
+        .image-wrap {
           overflow: hidden;
         }
 
-        .stadiumImage {
-          transition: transform 0.6s ease;
+        .stadium-image {
+          transition: transform 0.7s ease, filter 0.4s ease;
         }
 
-        .stadiumCard:hover .stadiumImage {
-          transform: scale(1.06);
+        .stadium-card:hover .stadium-image {
+          transform: scale(1.07);
+          filter: saturate(1.08);
+        }
+
+        .cta-chip {
+          transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            opacity 0.2s ease;
+        }
+
+        .cta-chip:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 14px 32px rgba(250, 204, 21, 0.18);
+          opacity: 0.97;
+        }
+
+        .cta-chip:active {
+          transform: translateY(0) scale(0.98);
+        }
+
+        .scroll-row::-webkit-scrollbar {
+          height: 8px;
+        }
+
+        .scroll-row::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.12);
+          border-radius: 999px;
+        }
+
+        @keyframes pageEnter {
+          from {
+            opacity: 0;
+            transform: scale(0.99);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
         }
 
         @keyframes fadeUp {
           from {
             opacity: 0;
-            transform: translateY(26px);
+            transform: translateY(28px);
           }
           to {
             opacity: 1;
@@ -128,19 +223,34 @@ export default function StadiumsPage() {
           }
         }
 
-        .scrollRow::-webkit-scrollbar {
-          height: 8px;
+        @keyframes pulseGlow {
+          0% {
+            box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+          }
+          50% {
+            box-shadow: 0 30px 86px rgba(250, 204, 21, 0.08);
+          }
+          100% {
+            box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+          }
         }
 
-        .scrollRow::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.12);
-          border-radius: 999px;
+        @keyframes slowZoom {
+          from {
+            transform: scale(1);
+          }
+          to {
+            transform: scale(1.06);
+          }
         }
       `}</style>
 
-      <div style={{ maxWidth: "1240px", margin: "0 auto", padding: "22px 20px 80px" }}>
+      <div
+        className="page-enter"
+        style={{ maxWidth: "1240px", margin: "0 auto", padding: "22px 20px 80px" }}
+      >
         <div
-          className="fadeUp"
+          className="fade-up"
           style={{
             display: "flex",
             justifyContent: "space-between",
@@ -159,44 +269,177 @@ export default function StadiumsPage() {
         </div>
 
         <div
-          className="fadeUp fadeUpDelay1"
+          className="fade-up delay-1 hero-shell"
           style={{
+            position: "relative",
+            height: "360px",
+            borderRadius: "30px",
+            overflow: "hidden",
             marginTop: "22px",
-            borderRadius: "28px",
-            padding: "30px",
-            background:
-              "linear-gradient(135deg, rgba(250,204,21,0.12), rgba(59,130,246,0.08), rgba(15,23,42,0.98))",
             border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 22px 60px rgba(0,0,0,0.28)",
           }}
         >
-          <h1
-            style={{
-              fontSize: "52px",
-              lineHeight: 0.98,
-              margin: "0 0 12px",
-              letterSpacing: "-0.05em",
-            }}
-          >
-            Official World Cup Stadiums
-          </h1>
+          <div className="hero-image" style={{ width: "100%", height: "100%" }}>
+            <img
+              src={stadiums[0].image}
+              alt={stadiums[0].name}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                display: "block",
+              }}
+            />
+          </div>
 
-          <p
+          <div
             style={{
-              color: "#cbd5e1",
-              maxWidth: "820px",
-              fontSize: "17px",
-              lineHeight: 1.75,
-              margin: 0,
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(90deg, rgba(2,6,23,0.9) 0%, rgba(2,6,23,0.58) 45%, rgba(2,6,23,0.18) 100%)",
+            }}
+          />
+
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "radial-gradient(circle at 15% 18%, rgba(250,204,21,0.16), transparent 22%), radial-gradient(circle at 82% 20%, rgba(59,130,246,0.10), transparent 24%)",
+            }}
+          />
+
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              padding: "28px",
             }}
           >
-            Explore the venues that give Rugby World Cup 2027 its scale, emotion and
-            atmosphere. Tap any stadium to open a full detail page.
-          </p>
+            <div
+              style={{
+                display: "inline-block",
+                padding: "7px 12px",
+                borderRadius: "999px",
+                background: "rgba(250,204,21,0.14)",
+                color: "#facc15",
+                fontWeight: 800,
+                fontSize: "12px",
+                marginBottom: "12px",
+                border: "1px solid rgba(250,204,21,0.16)",
+              }}
+            >
+              FEATURED VENUE
+            </div>
+
+            <h1
+              style={{
+                margin: "0 0 8px",
+                fontSize: "48px",
+                lineHeight: 0.98,
+                letterSpacing: "-0.05em",
+              }}
+            >
+              {stadiums[0].name}
+            </h1>
+
+            <div style={{ color: "#cbd5e1", fontSize: "16px", marginBottom: "10px" }}>
+              {stadiums[0].city} • Capacity {stadiums[0].capacity}
+            </div>
+
+            <p
+              style={{
+                margin: 0,
+                maxWidth: "700px",
+                color: "#e2e8f0",
+                lineHeight: 1.75,
+                fontSize: "16px",
+              }}
+            >
+              {stadiums[0].description}
+            </p>
+          </div>
         </div>
 
         <div
-          className="fadeUp fadeUpDelay2 scrollRow"
+          className="fade-up delay-2"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+            gap: "14px",
+            marginTop: "18px",
+          }}
+        >
+          <div
+            className="glass-card"
+            style={{
+              background: "rgba(255,255,255,0.05)",
+              borderRadius: "18px",
+              padding: "16px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "6px" }}>
+              Host Nation
+            </div>
+            <div style={{ fontSize: "24px", fontWeight: 900 }}>Australia</div>
+          </div>
+
+          <div
+            className="glass-card"
+            style={{
+              background: "rgba(255,255,255,0.05)",
+              borderRadius: "18px",
+              padding: "16px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "6px" }}>
+              Venue Browser
+            </div>
+            <div style={{ fontSize: "24px", fontWeight: 900 }}>Elite UI</div>
+          </div>
+
+          <div
+            className="glass-card"
+            style={{
+              background: "rgba(255,255,255,0.05)",
+              borderRadius: "18px",
+              padding: "16px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "6px" }}>
+              Motion Feel
+            </div>
+            <div style={{ fontSize: "24px", fontWeight: 900 }}>Smooth Flow</div>
+          </div>
+
+          <div
+            className="glass-card"
+            style={{
+              background: "rgba(255,255,255,0.05)",
+              borderRadius: "18px",
+              padding: "16px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "6px" }}>
+              Experience
+            </div>
+            <div style={{ fontSize: "24px", fontWeight: 900 }}>Premium App</div>
+          </div>
+        </div>
+
+        <div
+          className="fade-up delay-3 scroll-row"
           style={{
             display: "flex",
             overflowX: "auto",
@@ -208,11 +451,11 @@ export default function StadiumsPage() {
           {stadiums.map((stadium, i) => (
             <Link
               key={i}
-              href={`/stadiums/${stadium.slug}`}
-              style={{ textDecoration: "none", color: "inherit" }}
+              href={/stadiums/${stadium.slug}}
+              className="stadium-link"
             >
               <div
-                className="stadiumCard"
+                className="stadium-card"
                 style={{
                   minWidth: "320px",
                   borderRadius: "24px",
@@ -223,9 +466,9 @@ export default function StadiumsPage() {
                   boxShadow: "0 18px 40px rgba(0,0,0,0.24)",
                 }}
               >
-                <div className="stadiumImageWrap" style={{ height: "190px" }}>
+                <div className="image-wrap" style={{ height: "190px" }}>
                   <img
-                    className="stadiumImage"
+                    className="stadium-image"
                     src={stadium.image}
                     alt={stadium.name}
                     style={{
