@@ -2,92 +2,20 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/lib/supabase";
 
-function getEntryFee(stage: string) {
-  switch (stage) {
-    case "Pool":
-      return 100;
-    case "Playoff":
-      return 200;
-    case "Final":
-      return 300;
-    default:
-      return 100;
-  }
-}
 type MatchStage = "Pool" | "Playoff" | "Final";
 
-const matches = [
-  {
-    id: 1,
-    stage: "Pool",
-    home: "South Africa",
-    away: "New Zealand",
-    stadium: "Cape Town Stadium",
-    location: "Cape Town, South Africa",
-    capacity: "55,000",
-    summary:
-      "One of the most iconic stadiums in the world, set between Table Mountain and the Atlantic Ocean.",
-    homeGround: "Used for major Springbok tests and international events.",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Cape_Town_Stadium.jpg",
-    kickoff: "10 Sep 2027 • 18:00",
-    lat: -33.9036,
-    lng: 18.4115,
-  },
-  {
-    id: 2,
-    stage: "Pool",
-    home: "England",
-    away: "France",
-    stadium: "Twickenham Stadium",
-    location: "London, England",
-    capacity: "82,000",
-    summary:
-      "The home of England Rugby and one of the most historic rugby stadiums globally.",
-    homeGround: "Official home of England Rugby.",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/5c/Twickenham_Stadium.jpg",
-    kickoff: "12 Sep 2027 • 20:00",
-    lat: 51.4553,
-    lng: -0.3410,
-  },
-  {
-    id: 3,
-    stage: "Playoff",
-    home: "Ireland",
-    away: "Australia",
-    stadium: "Stadium Australia",
-    location: "Sydney, Australia",
-    capacity: "83,500",
-    summary:
-      "A world-class Olympic stadium that hosts major finals and international events.",
-    homeGround: "Used for major Australian international fixtures.",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/50/Stadium_Australia.jpg",
-    kickoff: "20 Oct 2027 • 19:30",
-    lat: -33.8474,
-    lng: 151.0634,
-  },
-  {
-    id: 4,
-    stage: "Final",
-    home: "South Africa",
-    away: "France",
-    stadium: "Melbourne Cricket Ground",
-    location: "Melbourne, Australia",
-    capacity: "100,000",
-    summary:
-      "One of the largest stadiums in the world and home to historic global sporting events.",
-    homeGround: "Primarily cricket and AFL, but iconic for global finals.",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/6/62/Melbourne_Cricket_Ground_%28MCG%29.jpg",
-    kickoff: "30 Oct 2027 • 19:30",
-    lat: -37.8199,
-    lng: 144.9834,
-  },
-];
+type Match = {
+  id: number;
+  stage: MatchStage;
+  home: string;
+  away: string;
+  stadium: string;
+  location: string;
+  kickoff: string;
+  image: string;
+  prize: string;
+};
 
 type PredictionEntry = {
   entryNumber: number;
@@ -97,102 +25,130 @@ type PredictionEntry = {
 
 type PredictionsState = Record<number, PredictionEntry[]>;
 
-const STORAGE_KEY = "ruckkings_predictions_v4";
+const STORAGE_KEY = "ruckkings_predictions_v6";
 const MAX_ENTRIES_PER_MATCH = 3;
 
+const matches: Match[] = [
+  {
+    id: 1,
+    stage: "Pool",
+    home: "South Africa",
+    away: "New Zealand",
+    stadium: "Stadium Australia",
+    location: "Sydney, Australia",
+    kickoff: "10 Sep 2027 • 18:00",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/5/50/Stadium_Australia.jpg",
+    prize: "R5,000",
+  },
+  {
+    id: 2,
+    stage: "Pool",
+    home: "England",
+    away: "France",
+    stadium: "Melbourne Cricket Ground",
+    location: "Melbourne, Australia",
+    kickoff: "12 Sep 2027 • 20:00",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/6/62/Melbourne_Cricket_Ground_%28MCG%29.jpg",
+    prize: "R5,000",
+  },
+  {
+    id: 3,
+    stage: "Playoff",
+    home: "Australia",
+    away: "Ireland",
+    stadium: "Perth Stadium",
+    location: "Perth, Australia",
+    kickoff: "18 Sep 2027 • 19:30",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/5/57/Perth_Stadium_aerial.jpg",
+    prize: "R20,000",
+  },
+  {
+    id: 4,
+    stage: "Final",
+    home: "TBD",
+    away: "TBD",
+    stadium: "Adelaide Oval",
+    location: "Adelaide, Australia",
+    kickoff: "28 Sep 2027 • 20:00",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/2/2e/Adelaide_Oval_2016.jpg",
+    prize: "R50,000",
+  },
+];
 
-function getStagePrize(stage: MatchStage) {
-  if (stage === "Pool") return "R10,000";
-  if (stage === "Playoff") return "R25,000";
-  return "R50,000";
+function getStageColor(stage: MatchStage) {
+  if (stage === "Final") return "#facc15";
+  if (stage === "Playoff") return "#22c55e";
+  return "#38bdf8";
 }
 
-function getPredictedWinner(
-  homeScore: string,
-  awayScore: string,
-  home: string,
-  away: string
-) {
+function getWinner(home: string, away: string, homeScore: string, awayScore: string) {
   const h = Number(homeScore);
   const a = Number(awayScore);
 
-  if (homeScore === "" || awayScore === "" || Number.isNaN(h) || Number.isNaN(a)) {
-    return "Incomplete";
-  }
-
-  if (h > a) return home;
-  if (a > h) return away;
-  return "Draw";
+  if (homeScore === "" || awayScore === "") return "Enter both scores";
+  if (Number.isNaN(h) || Number.isNaN(a)) return "Enter valid scores";
+  if (h === a) return "Draw";
+  return h > a ? home : away;
 }
 
 export default function MatchesPage() {
   const [showRules, setShowRules] = useState(false);
-  const [predictions, setPredictions] = useState<PredictionsState>({});
   const [localSaveMessage, setLocalSaveMessage] = useState("");
-  const [savingEntryKey, setSavingEntryKey] = useState("");
+  const [predictions, setPredictions] = useState<PredictionsState>({});
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) return;
-
     try {
-      const parsed = JSON.parse(stored) as PredictionsState;
-      setPredictions(parsed);
-    } catch (error) {
-      console.log(error);
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        setPredictions(JSON.parse(raw));
+      }
+    } catch {
+      setPredictions({});
     }
   }, []);
 
-  const totalEntries = useMemo(() => {
-    return Object.values(predictions).reduce((sum, entries) => sum + entries.length, 0);
-  }, [predictions]);
+  function ensureMatchEntries(matchId: number) {
+    return predictions[matchId] || [{ entryNumber: 1, homeScore: "", awayScore: "" }];
+  }
 
   function updateEntry(
     matchId: number,
-    entryNumber: number,
+    entryIndex: number,
     field: "homeScore" | "awayScore",
     value: string
   ) {
     setPredictions((prev) => {
-      const existing = prev[matchId] ?? [];
-      const nextEntries = [...existing];
+      const currentEntries =
+        prev[matchId] || [{ entryNumber: 1, homeScore: "", awayScore: "" }];
 
-      while (nextEntries.length < entryNumber) {
-        nextEntries.push({
-          entryNumber: nextEntries.length + 1,
-          homeScore: "",
-          awayScore: "",
-        });
-      }
-
-      const index = entryNumber - 1;
-      nextEntries[index] = {
-        ...nextEntries[index],
-        entryNumber,
-        [field]: value,
-      };
+      const updatedEntries = currentEntries.map((entry, index) =>
+        index === entryIndex ? { ...entry, [field]: value } : entry
+      );
 
       return {
         ...prev,
-        [matchId]: nextEntries,
+        [matchId]: updatedEntries,
       };
     });
   }
 
   function addEntry(matchId: number) {
     setPredictions((prev) => {
-      const existing = prev[matchId] ?? [];
+      const currentEntries =
+        prev[matchId] || [{ entryNumber: 1, homeScore: "", awayScore: "" }];
 
-      if (existing.length >= MAX_ENTRIES_PER_MATCH) {
-        return prev;
-      }
+      if (currentEntries.length >= MAX_ENTRIES_PER_MATCH) return prev;
 
       return {
         ...prev,
         [matchId]: [
-          ...existing,
+          ...currentEntries,
           {
-            entryNumber: existing.length + 1,
+            entryNumber: currentEntries.length + 1,
             homeScore: "",
             awayScore: "",
           },
@@ -201,637 +157,749 @@ export default function MatchesPage() {
     });
   }
 
-  function removeEntry(matchId: number, entryNumber: number) {
-    setPredictions((prev) => {
-      const existing = prev[matchId] ?? [];
-
-      const filtered = existing
-        .filter((entry) => entry.entryNumber !== entryNumber)
-        .map((entry, index) => ({
-          ...entry,
-          entryNumber: index + 1,
-        }));
-
-      return {
-        ...prev,
-        [matchId]: filtered,
-      };
-    });
-  }
-
   function savePredictionsLocally() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(predictions));
-    setLocalSaveMessage("Predictions saved locally.");
-
-    window.setTimeout(() => {
-      setLocalSaveMessage("");
-    }, 2500);
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(predictions));
+      setLocalSaveMessage("Predictions saved locally.");
+      window.setTimeout(() => setLocalSaveMessage(""), 2500);
+    } catch {
+      setLocalSaveMessage("Could not save predictions.");
+      window.setTimeout(() => setLocalSaveMessage(""), 2500);
+    }
   }
 
-  async function savePrediction(match: any, entry: PredictionEntry) {
-    if (!entry.homeScore || !entry.awayScore) {
-      alert("Please enter both scores.");
-      return;
-    }
-
-    const entryKey = '${match.id}-${entry.entryNumber}';
-    setSavingEntryKey(entryKey);
-
-    const { error } = await supabase.from("predictions").insert({
-      match_id: match.id,
-      stage: match.stage,
-      home_team: match.home,
-      away_team: match.away,
-      home_score: Number(entry.homeScore),
-      away_score: Number(entry.awayScore),
-      entry_number: entry.entryNumber,
-      stadium: match.stadium,
-      location: match.location,
-      kickoff: match.kickoff,
-    });
-
-    setSavingEntryKey("");
-
-    if (error) {
-      alert(`Error saving prediction: ${error.message}`);
-      return;
-    }
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(predictions));
-    alert("Prediction saved successfully.");
-  }
+  const totalEntries = useMemo(() => {
+    return Object.values(predictions).reduce((sum, entries) => sum + entries.length, 0);
+  }, [predictions]);
 
   return (
     <main
       style={{
         minHeight: "100vh",
-        background: "radial-gradient(circle at top, #0f172a 0%, #020617 100%)",
+        background:
+          "radial-gradient(circle at top, #111827 0%, #020617 55%, #01030a 100%)",
         color: "white",
         fontFamily: "Arial, sans-serif",
       }}
     >
-      <div style={{ maxWidth: "1180px", margin: "0 auto", padding: "28px 20px 60px" }}>
-        <Link
-          href="/"
+      <style jsx>{`
+        .page-enter {
+          animation: pageEnter 0.8s ease both;
+        }
+
+        .fade-up {
+          opacity: 0;
+          transform: translateY(28px);
+          animation: fadeUp 0.8s ease forwards;
+        }
+
+        .delay-1 {
+          animation-delay: 0.08s;
+        }
+
+        .delay-2 {
+          animation-delay: 0.16s;
+        }
+
+        .delay-3 {
+          animation-delay: 0.24s;
+        }
+
+        .delay-4 {
+          animation-delay: 0.34s;
+        }
+
+        .hero-shell {
+          animation: pulseGlow 4.5s ease-in-out infinite;
+        }
+
+        .hero-image {
+          animation: slowZoom 16s ease-in-out infinite alternate;
+        }
+
+        .glass-card {
+          transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease,
+            border-color 0.3s ease,
+            background 0.3s ease;
+        }
+
+        .glass-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 24px 56px rgba(0, 0, 0, 0.36);
+          border-color: rgba(255, 255, 255, 0.14);
+          background: rgba(255, 255, 255, 0.07);
+        }
+
+        .match-card {
+          position: relative;
+          overflow: hidden;
+          transition:
+            transform 0.32s ease,
+            box-shadow 0.32s ease,
+            border-color 0.32s ease,
+            background 0.32s ease;
+        }
+
+        .match-card:hover {
+          transform: translateY(-10px) scale(1.004);
+          box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
+          border-color: rgba(250, 204, 21, 0.2);
+          background: rgba(255, 255, 255, 0.07);
+        }
+
+        .match-card::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            120deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.06) 45%,
+            transparent 70%
+          );
+          transform: translateX(-120%);
+          transition: transform 0.8s ease;
+          pointer-events: none;
+        }
+
+        .match-card:hover::after {
+          transform: translateX(120%);
+        }
+
+        .image-wrap {
+          overflow: hidden;
+        }
+
+        .match-image {
+          transition: transform 0.7s ease, filter 0.4s ease;
+        }
+
+        .match-card:hover .match-image {
+          transform: scale(1.06);
+          filter: saturate(1.08);
+        }
+
+        .cta-chip,
+        .cta-button {
+          transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            opacity 0.2s ease;
+        }
+
+        .cta-chip:hover,
+        .cta-button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 14px 32px rgba(250, 204, 21, 0.14);
+          opacity: 0.97;
+        }
+
+        .cta-chip:active,
+        .cta-button:active {
+          transform: translateY(0) scale(0.98);
+        }
+
+        .score-input {
+          transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+        }
+
+        .score-input:focus {
+          outline: none;
+          border-color: rgba(250, 204, 21, 0.6);
+          box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.12);
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .rules-modal {
+          animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes pageEnter {
+          from {
+            opacity: 0;
+            transform: scale(0.99);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes fadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(28px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes pulseGlow {
+          0% {
+            box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+          }
+          50% {
+            box-shadow: 0 30px 86px rgba(250, 204, 21, 0.08);
+          }
+          100% {
+            box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+          }
+        }
+
+        @keyframes slowZoom {
+          from {
+            transform: scale(1);
+          }
+          to {
+            transform: scale(1.05);
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      `}</style>
+
+      <div
+        className="page-enter"
+        style={{ maxWidth: "1240px", margin: "0 auto", padding: "22px 20px 80px" }}
+      >
+        <div
+          className="fade-up"
           style={{
-            color: "#facc15",
-            textDecoration: "none",
-            fontWeight: 700,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "16px",
+            flexWrap: "wrap",
           }}
         >
-          ← Back Home
-        </Link>
+          <Link href="/" style={{ color: "#facc15", textDecoration: "none", fontWeight: 800 }}>
+            ← Back
+          </Link>
 
-        <section
+          <div style={{ fontWeight: 900, letterSpacing: "-0.03em" }}>
+            <span style={{ color: "#facc15" }}>Ruck</span>Kings
+          </div>
+        </div>
+
+        <div
+          className="fade-up delay-1 hero-shell"
           style={{
-            marginTop: "18px",
-            borderRadius: "28px",
+            position: "relative",
+            height: "360px",
+            borderRadius: "30px",
             overflow: "hidden",
-            background:
-              "linear-gradient(135deg, rgba(250,204,21,0.16), rgba(34,197,94,0.08), rgba(15,23,42,0.98))",
+            marginTop: "22px",
             border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.28)",
           }}
         >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1.2fr 0.8fr",
-              gap: "20px",
-              padding: "30px",
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  display: "inline-block",
-                  padding: "7px 12px",
-                  borderRadius: "999px",
-                  background: "rgba(250,204,21,0.14)",
-                  color: "#facc15",
-                  fontWeight: 700,
-                  fontSize: "13px",
-                  marginBottom: "14px",
-                }}
-              >
-                Rugby World Cup 2027
-              </div>
-
-              <h1 style={{ fontSize: "46px", margin: "0 0 10px", lineHeight: 1.05 }}>
-                Predict Scores. Win Big. Own the Tournament.
-              </h1>
-
-              <p
-                style={{
-                  color: "#cbd5e1",
-                  maxWidth: "760px",
-                  fontSize: "17px",
-                  margin: 0,
-                  lineHeight: 1.6,
-                }}
-              >
-                Enter up to 3 score predictions per match, compete for stage-based
-                prize pools, and build your advantage throughout the World Cup.
-              </p>
-
-              <div
-                style={{
-                  display: "flex",
-                  gap: "12px",
-                  flexWrap: "wrap",
-                  marginTop: "22px",
-                }}
-              >
-                <button
-                  onClick={() => setShowRules(true)}
-                  style={{
-                    background: "#facc15",
-                    color: "#111827",
-                    border: "none",
-                    borderRadius: "12px",
-                    padding: "12px 18px",
-                    fontWeight: 800,
-                    cursor: "pointer",
-                  }}
-                >
-                  View Rules
-                </button>
-
-                <button
-                  onClick={savePredictionsLocally}
-                  style={{
-                    background: "#22c55e",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "12px",
-                    padding: "12px 18px",
-                    fontWeight: 800,
-                    cursor: "pointer",
-                  }}
-                >
-                  Save All Predictions Locally
-                </button>
-                
-                <Link 
-                  href="/stadiums"
-                  style={{ textDecoration: "none" }}
-                >
-                  <span
-                    style={{
-                      display: "inline-block",
-                      background: "#3b82f6",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "12px",
-                      padding: "12px 18px",
-                      fontWeight: 800,
-                      cursor: "pointer",
-                    }}
-  >
-    🏟 Explore Stadiums
-  </span>
-</Link>
-              </div>
-
-              <div style={{ marginTop: "16px", color: "#94a3b8", fontSize: "14px" }}>
-                Total entries in progress:{" "}
-                <strong style={{ color: "white" }}>{totalEntries}</strong>
-              </div>
-
-              {localSaveMessage ? (
-                <div style={{ marginTop: "10px", color: "#86efac", fontWeight: 700 }}>
-                  {localSaveMessage}
-                </div>
-              ) : null}
-            </div>
-
-            <div
-              style={{
-                background: "rgba(255,255,255,0.05)",
-                borderRadius: "20px",
-                padding: "20px",
-                border: "1px solid rgba(255,255,255,0.08)",
-                alignSelf: "stretch",
-              }}
-            >
-              <h2 style={{ marginTop: 0 }}>Prize Pools</h2>
-
-              <div style={{ color: "#cbd5e1", lineHeight: 1.9 }}>
-                <div>
-                  Pool Matches: <strong style={{ color: "#facc15" }}>R10,000</strong>
-                </div>
-                <div>
-                  Playoff Matches: <strong style={{ color: "#facc15" }}>R25,000</strong>
-                </div>
-                <div>
-                  Final Match: <strong style={{ color: "#facc15" }}>R50,000</strong>
-                </div>
-              </div>
-
-              <div
-                style={{
-                  marginTop: "18px",
-                  padding: "14px",
-                  borderRadius: "14px",
-                  background: "rgba(250,204,21,0.1)",
-                  color: "#fde68a",
-                }}
-              >
-                Entry model: up to <strong>3 entries per match</strong>.
-              </div>
-
-              <div
-                style={{
-                  marginTop: "18px",
-                  padding: "16px",
-                  borderRadius: "16px",
-                  background: "rgba(255,255,255,0.04)",
-                }}
-              >
-                <div style={{ fontSize: "13px", color: "#94a3b8", marginBottom: "6px" }}>
-                  Sponsored Space
-                </div>
-                <div style={{ fontWeight: 800, fontSize: "18px" }}>Your Brand Here</div>
-                <div style={{ color: "#cbd5e1", marginTop: "6px" }}>
-                  Premium sponsor placement for major tournament campaigns.
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          style={{
-            marginTop: "24px",
-            display: "grid",
-            gridTemplateColumns: "1.6fr 1fr",
-            gap: "18px",
-          }}
-        >
-          <div
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              borderRadius: "20px",
-              padding: "20px",
-              border: "1px solid rgba(255,255,255,0.08)",
-            }}
-          >
-            <h2 style={{ marginTop: 0 }}>Intro Video</h2>
-            <p style={{ color: "#94a3b8", marginTop: 0 }}>
-              Replace this later with your short branded opening video.
-            </p>
-
-            <video
-              width="100%"
-              controls
-              poster="https://images.unsplash.com/photo-1547347298-4074fc3086f0"
-              style={{ borderRadius: "16px", background: "#000" }}
-            >
-              <source src="/intro.mp4" type="video/mp4" />
-            </video>
-          </div>
-
-          <div
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              borderRadius: "20px",
-              padding: "20px",
-              border: "1px solid rgba(255,255,255,0.08)",
-            }}
-          >
-            <h2 style={{ marginTop: 0 }}>Competition Format</h2>
-
-            <div style={{ color: "#cbd5e1", lineHeight: 1.8 }}>
-              <div>• Predict the score for each featured match</div>
-              <div>• Up to 3 entries allowed per match</div>
-              <div>• Correct winner earns core points</div>
-              <div>• Exact score and margin earn bonus points</div>
-              <div>• Higher stages unlock bigger prizes</div>
-            </div>
-
-            <div
-              style={{
-                marginTop: "18px",
-                padding: "14px",
-                borderRadius: "14px",
-                background: "rgba(34,197,94,0.1)",
-                color: "#bbf7d0",
-              }}
-            >
-              Best strategy: use Entry 1 as your safest pick and Entries 2–3 for upside.
-            </div>
-          </div>
-        </section>
-        {showRules ? (
-          <div
-            onClick={() => setShowRules(false)}
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "rgba(0,0,0,0.82)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "20px",
-              zIndex: 999,
-            }}
-          >
-            <div
-              onClick={(e) => e.stopPropagation()}
+          <div className="hero-image" style={{ width: "100%", height: "100%" }}>
+            <img
+              src={matches[0].image}
+              alt={matches[0].stadium}
               style={{
                 width: "100%",
-                maxWidth: "580px",
-                background: "#0f172a",
-                borderRadius: "22px",
-                padding: "24px",
-                border: "1px solid rgba(255,255,255,0.08)",
-                boxShadow: "0 20px 60px rgba(0,0,0,0.35)",
+                height: "100%",
+                objectFit: "cover",
+                display: "block",
+              }}
+            />
+          </div>
+
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(90deg, rgba(2,6,23,0.92) 0%, rgba(2,6,23,0.60) 45%, rgba(2,6,23,0.18) 100%)",
+            }}
+          />
+
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "radial-gradient(circle at 15% 18%, rgba(250,204,21,0.16), transparent 22%), radial-gradient(circle at 82% 20%, rgba(59,130,246,0.10), transparent 24%)",
+            }}
+          />
+
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              padding: "28px",
+            }}
+          >
+            <div
+              style={{
+                display: "inline-block",
+                padding: "7px 12px",
+                borderRadius: "999px",
+                background: "rgba(250,204,21,0.14)",
+                color: "#facc15",
+                fontWeight: 800,
+                fontSize: "12px",
+                marginBottom: "12px",
+                border: "1px solid rgba(250,204,21,0.16)",
               }}
             >
-              <h2 style={{ marginTop: 0 }}>Competition Rules</h2>
-
-              <ul style={{ color: "#cbd5e1", lineHeight: 1.8, paddingLeft: "22px" }}>
-                <li>Each user may enter up to 3 predictions per match.</li>
-                <li>Correct winner: 5 points</li>
-                <li>Exact score: +10 points</li>
-                <li>Correct winning margin: +3 points</li>
-                <li>One team exact score: +2 points</li>
-                <li>Pool stage prize pool: R10,000</li>
-                <li>Playoff stage prize pool: R25,000</li>
-                <li>Final prize pool: R50,000</li>
-              </ul>
-
-              <button
-                onClick={() => setShowRules(false)}
-                style={{
-                  marginTop: "12px",
-                  background: "#facc15",
-                  color: "#111827",
-                  border: "none",
-                  borderRadius: "10px",
-                  padding: "10px 16px",
-                  fontWeight: 800,
-                  cursor: "pointer",
-                }}
-              >
-                Close
-              </button>
+              MATCHDAY HQ
             </div>
+
+            <h1
+              style={{
+                margin: "0 0 8px",
+                fontSize: "52px",
+                lineHeight: 0.96,
+                letterSpacing: "-0.05em",
+              }}
+            >
+              Predict scores.
+              <br />
+              Back the winner.
+              <br />
+              Chase the leaderboard.
+            </h1>
+
+            <div style={{ color: "#cbd5e1", fontSize: "16px", marginBottom: "10px" }}>
+              Rugby World Cup 2027 • Premium prediction experience
+            </div>
+
+            <p
+              style={{
+                margin: 0,
+                maxWidth: "720px",
+                color: "#e2e8f0",
+                lineHeight: 1.75,
+                fontSize: "16px",
+              }}
+            >
+              Enter up to three predictions per match, save them locally and build your
+              edge across pool games, knockouts and the final.
+            </p>
+          </div>
+        </div>
+
+        <div
+          className="fade-up delay-2"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+            gap: "14px",
+            marginTop: "18px",
+          }}
+        >
+          <div
+            className="glass-card"
+            style={{
+              background: "rgba(255,255,255,0.05)",
+              borderRadius: "18px",
+              padding: "16px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "6px" }}>
+              Total Matches
+            </div>
+            <div style={{ fontSize: "24px", fontWeight: 900 }}>{matches.length}</div>
+          </div>
+
+          <div
+            className="glass-card"
+            style={{
+              background: "rgba(255,255,255,0.05)",
+              borderRadius: "18px",
+              padding: "16px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "6px" }}>
+              Entries In Progress
+            </div>
+            <div style={{ fontSize: "24px", fontWeight: 900 }}>{totalEntries}</div>
+          </div>
+
+          <div
+            className="glass-card"
+            style={{
+              background: "rgba(255,255,255,0.05)",
+              borderRadius: "18px",
+              padding: "16px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "6px" }}>
+              Entry Model
+            </div>
+            <div style={{ fontSize: "24px", fontWeight: 900 }}>Up to 3</div>
+          </div>
+
+          <div
+            className="glass-card"
+            style={{
+              background: "rgba(255,255,255,0.05)",
+              borderRadius: "18px",
+              padding: "16px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "6px" }}>
+              Biggest Prize
+            </div>
+            <div style={{ fontSize: "24px", fontWeight: 900, color: "#facc15" }}>
+              R50,000
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="fade-up delay-3"
+          style={{
+            display: "flex",
+            gap: "12px",
+            flexWrap: "wrap",
+            marginTop: "22px",
+          }}
+        >
+          <button
+            className="cta-chip"
+            onClick={() => setShowRules(true)}
+            style={{
+              background: "#facc15",
+              color: "#111827",
+              border: "none",
+              borderRadius: "12px",
+              padding: "12px 18px",
+              fontWeight: 800,
+              cursor: "pointer",
+            }}
+          >
+            View Rules
+          </button>
+
+          <button
+            className="cta-chip"
+            onClick={savePredictionsLocally}
+            style={{
+              background: "#22c55e",
+              color: "white",
+              border: "none",
+              borderRadius: "12px",
+              padding: "12px 18px",
+              fontWeight: 800,
+              cursor: "pointer",
+            }}
+          >
+            Save All Predictions Locally
+          </button>
+
+          <Link href="/stadiums" style={{ textDecoration: "none" }}>
+            <span
+              className="cta-chip"
+              style={{
+                display: "inline-block",
+                background: "#3b82f6",
+                color: "white",
+                borderRadius: "12px",
+                padding: "12px 18px",
+                fontWeight: 800,
+                cursor: "pointer",
+              }}
+            >
+              🏟 Explore Stadiums
+            </span>
+          </Link>
+        </div>
+
+        <div
+          className="fade-up delay-4"
+          style={{ marginTop: "14px", color: "#94a3b8", fontSize: "14px" }}
+        >
+          Total entries in progress:{" "}
+          <strong style={{ color: "white" }}>{totalEntries}</strong>
+        </div>
+
+        {localSaveMessage ? (
+          <div
+            className="fade-up delay-4"
+            style={{
+              marginTop: "10px",
+              color: "#86efac",
+              fontWeight: 700,
+            }}
+          >
+            {localSaveMessage}
           </div>
         ) : null}
 
-        <section style={{ marginTop: "28px", display: "grid", gap: "24px" }}>
-          {matches.map((match) => {
-            const entries = predictions[match.id] ?? [];
+        <div
+          className="fade-up delay-4"
+          style={{
+            display: "grid",
+            gap: "20px",
+            marginTop: "30px",
+          }}
+        >
+          {matches.map((match, matchIndex) => {
+            const entries = ensureMatchEntries(match.id);
 
             return (
-              <article
+              <section
                 key={match.id}
+                className="match-card"
                 style={{
                   background: "rgba(255,255,255,0.05)",
-                  borderRadius: "24px",
+                  borderRadius: "26px",
                   overflow: "hidden",
                   border: "1px solid rgba(255,255,255,0.08)",
-                  boxShadow: "0 20px 50px rgba(0,0,0,0.25)",
+                  boxShadow: "0 18px 40px rgba(0,0,0,0.24)",
+                  animationDelay: ${0.12 * matchIndex}s,
                 }}
               >
-                <img
-                  src={match.image}
-                  alt={match.stadium}
-                  style={{
-                    width: "100%",
-                    height: "300px",
-                    objectFit: "cover",
-                    display: "block",
-                  }}
-                />
+                <div className="image-wrap" style={{ position: "relative", height: "240px" }}>
+                  <img
+                    className="match-image"
+                    src={match.image}
+                    alt={match.stadium}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
 
-                <div style={{ padding: "24px" }}>
                   <div
                     style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: "12px",
-                      alignItems: "center",
-                      flexWrap: "wrap",
+                      position: "absolute",
+                      inset: 0,
+                      background:
+                        "linear-gradient(to top, rgba(0,0,0,0.82), rgba(0,0,0,0.18), transparent)",
+                    }}
+                  />
+
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "22px",
+                      right: "22px",
+                      bottom: "18px",
                     }}
                   >
-                    <div>
-                      <div
-                        style={{
-                          display: "inline-block",
-                          background: "rgba(250,204,21,0.14)",
-                          color: "#facc15",
-                          padding: "6px 10px",
-                          borderRadius: "999px",
-                          fontSize: "12px",
-                          fontWeight: 700,
-                          marginBottom: "10px",
-                        }}
-                      >
-                        {match.stage} Match • Prize {getStagePrize(match.stage as any)}
-                      </div>
+                    <div
+                      style={{
+                        display: "inline-block",
+                        padding: "6px 10px",
+                        borderRadius: "999px",
+                        background: "rgba(255,255,255,0.10)",
+                        color: getStageColor(match.stage),
+                        fontWeight: 800,
+                        fontSize: "12px",
+                        marginBottom: "10px",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                      }}
+                    >
+                      {match.stage} Match • Prize {match.prize}
+                    </div>
 
-                      <h2 style={{ margin: "0 0 8px", fontSize: "34px" }}>
-                        {match.home} vs {match.away}
-                      </h2>
+                    <h2
+                      style={{
+                        margin: 0,
+                        fontSize: "34px",
+                        lineHeight: 1.02,
+                        letterSpacing: "-0.04em",
+                      }}
+                    >
+                      {match.home} vs {match.away}
+                    </h2>
 
-                      <div style={{ color: "#cbd5e1" }}>{match.kickoff}</div>
+                    <div style={{ color: "#dbe4f0", marginTop: "8px", fontSize: "15px" }}>
+                      {match.stadium} • {match.location}
                     </div>
                   </div>
+                </div>
 
+                <div style={{ padding: "22px" }}>
                   <div
                     style={{
-                      marginTop: "18px",
                       display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "16px",
+                      gridTemplateColumns: "1fr 1fr 1fr",
+                      gap: "12px",
+                      marginBottom: "18px",
                     }}
                   >
                     <div
+                      className="glass-card"
                       style={{
                         background: "rgba(255,255,255,0.04)",
-                        padding: "16px",
                         borderRadius: "16px",
+                        padding: "14px",
+                        border: "1px solid rgba(255,255,255,0.06)",
                       }}
                     >
-                      <div style={{ color: "#94a3b8", fontSize: "13px", marginBottom: "6px" }}>
-                        Stadium
+                      <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "4px" }}>
+                        Kickoff
                       </div>
-                      <div style={{ fontWeight: 800 }}>{match.stadium}
+                      <div style={{ fontWeight: 800 }}>{match.kickoff}</div>
+                    </div>
+
+                    <div
+                      className="glass-card"
+                      style={{
+                        background: "rgba(255,255,255,0.04)",
+                        borderRadius: "16px",
+                        padding: "14px",
+                        border: "1px solid rgba(255,255,255,0.06)",
+                      }}
+                    >
+                      <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "4px" }}>
+                        Stage
                       </div>
-                      <a
-                        href={`https://www.google.com/maps?q=${match.lat},${match.lng}`}
-                        target="_blank"
-                        style={{
-                          display: "inline-block",
-                          marginTop: "8px",
-                          color: "#38bdf8",
-                          fontWeight: 700,
-                          textDecoration: "none",
-                        }}
-                      >
-                        View on Map →
-                      </a>
-                      <div style={{ color: "#cbd5e1", marginTop: "6px" }}>{match.location}</div>
-                      <div style={{ color: "#cbd5e1", marginTop: "6px" }}>
-                        Capacity: {match.capacity}
+                      <div style={{ fontWeight: 800, color: getStageColor(match.stage) }}>
+                        {match.stage}
                       </div>
                     </div>
 
                     <div
+                      className="glass-card"
                       style={{
                         background: "rgba(255,255,255,0.04)",
-                        padding: "16px",
                         borderRadius: "16px",
+                        padding: "14px",
+                        border: "1px solid rgba(255,255,255,0.06)",
                       }}
                     >
-                      <div style={{ color: "#94a3b8", fontSize: "13px", marginBottom: "6px" }}>
-                        Stadium Notes
+                      <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "4px" }}>
+                        Prize Pool
                       </div>
-                      <div style={{ color: "#cbd5e1", marginBottom: "8px" }}>
-                        {match.summary}
-                      </div>
-                      <div style={{ color: "#fde68a" }}>{match.homeGround}</div>
+                      <div style={{ fontWeight: 800 }}>{match.prize}</div>
                     </div>
                   </div>
 
                   <div style={{ marginTop: "24px" }}>
-                    <h3 style={{ marginBottom: "10px" }}>Your Entries</h3>
-
-                    {entries.length === 0 ? (
-                      <div style={{ color: "#94a3b8", marginBottom: "14px" }}>
-                        No entries yet. Add your first prediction below.
-                      </div>
-                    ) : null}
+                    <h3 style={{ margin: "0 0 12px", fontSize: "24px", letterSpacing: "-0.03em" }}>
+                      Your Entries
+                    </h3>
 
                     <div style={{ display: "grid", gap: "14px" }}>
-                      {entries.map((entry) => {
-                        const entryKey = '${match.id}-${entry.entryNumber}';
-                        const isSaving = savingEntryKey === entryKey;
+                      {entries.map((entry, entryIndex) => (
+                        <div
+                          key={${match.id}-${entry.entryNumber}}
+                          className="glass-card"
+                          style={{
+                            background: "rgba(255,255,255,0.04)",
+                            borderRadius: "18px",
+                            padding: "16px",
+                            border: "1px solid rgba(255,255,255,0.06)",
+                          }}
+                        >
+                          <div style={{ fontWeight: 800, marginBottom: "12px" }}>
+                            Entry #{entry.entryNumber}
+                          </div>
 
-                        return (
                           <div
-                            key={entry.entryNumber}
                             style={{
-                              background: "rgba(255,255,255,0.04)",
-                              borderRadius: "16px",
-                              padding: "16px",
+                              display: "grid",
+                              gridTemplateColumns: "1fr 1fr",
+                              gap: "12px",
                             }}
                           >
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                gap: "12px",
-                                alignItems: "center",
-                                flexWrap: "wrap",
-                              }}
-                            >
-                              <div style={{ fontWeight: 800 }}>
-                                Entry #{entry.entryNumber}
-                              </div>
-
-                              <button
-                                onClick={() => removeEntry(match.id, entry.entryNumber)}
+                            <div>
+                              <div
                                 style={{
-                                  background: "rgba(239,68,68,0.14)",
-                                  color: "#fca5a5",
-                                  border: "1px solid rgba(239,68,68,0.3)",
-                                  borderRadius: "10px",
-                                  padding: "8px 12px",
-                                  cursor: "pointer",
-                                  fontWeight: 700,
+                                  color: "#94a3b8",
+                                  fontSize: "12px",
+                                  marginBottom: "6px",
                                 }}
                               >
-                                Remove
-                              </button>
-                            </div>
-
-                            <div
-                              style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr",
-                                gap: "12px",
-                                marginTop: "14px",
-                              }}
-                            >
+                                {match.home}
+                              </div>
                               <input
+                                className="score-input"
                                 type="number"
                                 value={entry.homeScore}
-                                placeholder={'${match.home} score'}
                                 onChange={(e) =>
-                                  updateEntry(
-                                    match.id,
-                                    entry.entryNumber,
-                                    "homeScore",
-                                    e.target.value
-                                  )
+                                  updateEntry(match.id, entryIndex, "homeScore", e.target.value)
                                 }
+                                placeholder="Home score"
                                 style={{
-                                  padding: "12px",
+                                  width: "100%",
+                                  padding: "12px 14px",
                                   borderRadius: "12px",
-                                  border: "1px solid rgba(255,255,255,0.08)",
-                                  background: "#0f172a",
+                                  border: "1px solid rgba(255,255,255,0.10)",
+                                  background: "rgba(255,255,255,0.05)",
                                   color: "white",
                                 }}
                               />
+                            </div>
 
+                            <div>
+                              <div
+                                style={{
+                                  color: "#94a3b8",
+                                  fontSize: "12px",
+                                  marginBottom: "6px",
+                                }}
+                              >
+                                {match.away}
+                              </div>
                               <input
+                                className="score-input"
                                 type="number"
                                 value={entry.awayScore}
-                                placeholder={'${match.away} score'}
                                 onChange={(e) =>
-                                  updateEntry(
-                                    match.id,
-                                    entry.entryNumber,
-                                    "awayScore",
-                                    e.target.value
-                                  )
+                                  updateEntry(match.id, entryIndex, "awayScore", e.target.value)
                                 }
+                                placeholder="Away score"
                                 style={{
-                                  padding: "12px",
+                                  width: "100%",
+                                  padding: "12px 14px",
                                   borderRadius: "12px",
-                                  border: "1px solid rgba(255,255,255,0.08)",
-                                  background: "#0f172a",
+                                  border: "1px solid rgba(255,255,255,0.10)",
+                                  background: "rgba(255,255,255,0.05)",
                                   color: "white",
                                 }}
                               />
                             </div>
-
-                            <div style={{ marginTop: "12px", color: "#cbd5e1" }}>
-                              Predicted winner:{" "}
-                              <strong style={{ color: "#facc15" }}>
-                                {getPredictedWinner(
-                                  entry.homeScore,
-                                  entry.awayScore,
-                                  match.home,
-                                  match.away
-                                )}
-                              </strong>
-                            </div>
-
-                            <button
-                              onClick={() => savePrediction(match, entry)}
-                              disabled={isSaving}
-                              style={{
-                                marginTop: "12px",
-                                background: isSaving ? "#374151" : "#22c55e",
-                                color: "white",
-                                border: "none",
-                                borderRadius: "10px",
-                                padding: "10px 14px",
-                                fontWeight: 800,
-                                cursor: isSaving ? "not-allowed" : "pointer",
-                              }}
-                            >
-                              {isSaving
-                                ? "Processing..."
-                                : `Pay & Enter (R${getEntryFee(match.stage)})`}
-                            </button>
                           </div>
-                        );
-                      })}
+
+                          <div
+                            style={{
+                              marginTop: "12px",
+                              color: "#facc15",
+                              fontWeight: 800,
+                            }}
+                          >
+                            Predicted winner:{" "}
+                            {getWinner(
+                              match.home,
+                              match.away,
+                              entry.homeScore,
+                              entry.awayScore
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
 
                     <div
@@ -839,15 +907,18 @@ export default function MatchesPage() {
                         display: "flex",
                         gap: "12px",
                         flexWrap: "wrap",
-                        marginTop: "14px",
+                        marginTop: "16px",
                       }}
                     >
                       <button
+                        className="cta-button"
                         onClick={() => addEntry(match.id)}
                         disabled={entries.length >= MAX_ENTRIES_PER_MATCH}
                         style={{
                           background:
-                            entries.length >= MAX_ENTRIES_PER_MATCH ? "#374151" : "#22c55e",
+                            entries.length >= MAX_ENTRIES_PER_MATCH
+                              ? "#374151"
+                              : "#22c55e",
                           color: "white",
                           border: "none",
                           borderRadius: "12px",
@@ -863,6 +934,7 @@ export default function MatchesPage() {
                       </button>
 
                       <button
+                        className="cta-button"
                         onClick={savePredictionsLocally}
                         style={{
                           background: "#facc15",
@@ -874,16 +946,73 @@ export default function MatchesPage() {
                           cursor: "pointer",
                         }}
                       >
-                        Save Predictions Locally
+                        Save Match Predictions
                       </button>
                     </div>
                   </div>
                 </div>
-              </article>
+              </section>
             );
           })}
-        </section>
+        </div>
       </div>
+
+      {showRules ? (
+        <div
+          className="rules-modal"
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.7)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              maxWidth: "720px",
+              width: "100%",
+              background: "#0f172a",
+              borderRadius: "24px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              boxShadow: "0 30px 70px rgba(0,0,0,0.45)",
+              padding: "24px",
+            }}
+          >
+            <h2 style={{ marginTop: 0, fontSize: "30px", letterSpacing: "-0.03em" }}>
+              Competition Rules
+            </h2>
+
+            <div style={{ color: "#cbd5e1", lineHeight: 1.85 }}>
+              <div>• Predict the winner and final score for each match.</div>
+              <div>• You may enter up to 3 predictions per match.</div>
+              <div>• Save predictions locally before final submission/payment.</div>
+              <div>• Prize pools increase by stage: Pool, Playoff and Final.</div>
+              <div>• Leaderboard ranking will depend on prediction accuracy.</div>
+            </div>
+
+            <button
+              className="cta-button"
+              onClick={() => setShowRules(false)}
+              style={{
+                marginTop: "20px",
+                background: "#facc15",
+                color: "#111827",
+                border: "none",
+                borderRadius: "12px",
+                padding: "12px 18px",
+                fontWeight: 800,
+                cursor: "pointer",
+              }}
+            >
+              Close Rules
+            </button>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
