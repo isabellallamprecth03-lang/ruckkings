@@ -1,4 +1,4 @@
-[5:53 PM, 3/24/2026] Liefie Lamprecht: "use client";
+"use client";
 
 import Link from "next/link";
 
